@@ -1,0 +1,2312 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kemil Gemilang - Qurban & Aqiqah Premium</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & Amiri for Islamic accents -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        arabic: ['Amiri', 'serif'],
+                    },
+                    colors: {
+                        emerald: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            800: '#065f46',
+                            900: '#064e3b',
+                            950: '#022c22',
+                        },
+                        amber: {
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                        }
+                    },
+                    animation: {
+                        fadeIn: 'fadeIn 0.35s ease-out forwards',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(12px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #059669;
+            border-radius: 10px;
+        }
+        @keyframes pulse-gold {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+        .gold-pulse {
+            animation: pulse-gold 2s infinite;
+        }
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #invoice-sheet, #invoice-sheet * {
+                visibility: visible;
+            }
+            #invoice-sheet {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 font-sans text-slate-800 antialiased min-h-screen flex flex-col">
+
+    <!-- Top Bar -->
+    <div class="bg-emerald-950 text-amber-400 py-2 px-4 text-xs sm:text-sm text-center font-medium border-b border-emerald-800">
+        <i class="fa-solid fa-star-and-crescent mr-2"></i> 
+        Layanan Syar'i, Amanah & Bersertifikat Sehat Dinas Pertanian. Gratis Ongkir Se-Jabodetabek!
+    </div>
+
+    <!-- Header / Navbar -->
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-sm shadow-sm border-b border-slate-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Logo -->
+            <a href="#" onclick="showSection('home')" class="flex items-center space-x-3 group">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-emerald-800 to-emerald-600 flex items-center justify-center text-amber-400 shadow-md group-hover:scale-105 transition-transform">
+                    <i class="fa-solid fa-cow text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-extrabold tracking-tight text-emerald-900 leading-none">KEMIL GEMILANG</h1>
+                    <span class="text-xs font-semibold text-amber-600 tracking-wider">HEWAN QURBAN & AQIQAH</span>
+                </div>
+            </a>
+
+            <!-- Desktop Nav -->
+            <nav id="desktop-nav" class="hidden md:flex items-center space-x-8 font-medium text-slate-600">
+                <a href="#katalog" onclick="showSection('home'); setTimeout(() => document.getElementById('katalog').scrollIntoView({behavior: 'smooth'}), 150)" class="nav-link hover:text-emerald-800 transition-colors">Katalog Qurban</a>
+                <a href="#aqiqah" onclick="showSection('aqiqah-custom')" class="nav-link hover:text-emerald-800 transition-colors">Paket Aqiqah</a>
+                <a href="#tabungan" onclick="showSection('tabungan')" class="nav-link hover:text-emerald-800 transition-colors flex items-center gap-1.5 text-emerald-800 font-semibold"><i class="fa-solid fa-piggy-bank text-amber-500"></i> Tabungan Qurban</a>
+                <a href="#lacak" onclick="showSection('tracking')" class="nav-link hover:text-emerald-800 transition-colors">Lacak Pesanan</a>
+            </nav>
+
+            <!-- Actions -->
+            <div class="flex items-center space-x-4">
+                <button onclick="toggleCart()" class="relative p-2.5 rounded-full bg-slate-100 hover:bg-emerald-50 hover:text-emerald-800 transition-colors">
+                    <i class="fa-solid fa-basket-shopping text-xl"></i>
+                    <span id="cart-badge" class="absolute -top-1 -right-1 bg-amber-500 text-white font-bold text-xs w-5 h-5 rounded-full flex items-center justify-center hidden">0</span>
+                </button>
+                <button onclick="handleHeaderCheckInvoice()" class="hidden sm:inline-flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-semibold text-sm transition-all shadow-sm shadow-amber-500/10">
+                    <i class="fa-solid fa-receipt"></i>
+                    <span>Cek Invoice</span>
+                </button>
+                <!-- Mobile Menu Button -->
+                <button onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-xl hover:bg-slate-100">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation Drawer -->
+    <div id="mobile-menu" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden transition-opacity duration-300">
+        <div class="bg-white w-72 h-full p-6 flex flex-col shadow-2xl justify-between transform translate-x-0 transition-transform duration-300">
+            <div>
+                <div class="flex items-center justify-between mb-8">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-10 h-10 rounded-lg bg-emerald-800 flex items-center justify-center text-amber-400">
+                            <i class="fa-solid fa-cow text-xl"></i>
+                        </div>
+                        <span class="font-bold text-emerald-900">Kemil Gemilang</span>
+                    </div>
+                    <button onclick="toggleMobileMenu()" class="p-2 rounded-lg hover:bg-slate-100">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </div>
+                <nav class="flex flex-col space-y-4 font-semibold text-slate-700">
+                    <a href="#katalog" onclick="toggleMobileMenu(); showSection('home'); setTimeout(() => document.getElementById('katalog').scrollIntoView({behavior: 'smooth'}), 150)" class="p-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-800">Katalog Qurban</a>
+                    <a href="#aqiqah" onclick="toggleMobileMenu(); showSection('aqiqah-custom')" class="p-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-800">Paket Aqiqah</a>
+                    <a href="#tabungan" onclick="toggleMobileMenu(); showSection('tabungan')" class="p-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-850 flex items-center gap-2"><i class="fa-solid fa-piggy-bank text-amber-500"></i> Tabungan Qurban</a>
+                    <a href="#lacak" onclick="toggleMobileMenu(); showSection('tracking')" class="p-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-800">Lacak Pesanan</a>
+                </nav>
+            </div>
+            <div class="border-t pt-6 space-y-4">
+                <button onclick="toggleMobileMenu(); handleHeaderCheckInvoice()" class="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-semibold text-center block text-sm">
+                    <i class="fa-solid fa-receipt mr-2"></i> Cek Invoice / Lacak
+                </button>
+                <p class="text-xs text-center text-slate-400">© 2026 Kemil Gemilang</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <main class="flex-grow">
+        <!-- SECTION 1: HOME PAGE -->
+        <section id="section-home" class="block animate-fadeIn">
+            <!-- Hero Banner -->
+            <div class="relative bg-emerald-950 text-white overflow-hidden py-16 lg:py-24">
+                <!-- Background decoration -->
+                <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#f59e0b_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                <div class="absolute -right-20 -bottom-20 w-96 h-96 bg-amber-500/20 rounded-full blur-3xl"></div>
+                
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 grid lg:grid-cols-12 gap-12 items-center">
+                    <!-- Text Info -->
+                    <div class="lg:col-span-7 space-y-6">
+                        <span class="inline-flex items-center space-x-2 bg-emerald-900/80 border border-emerald-700/50 px-3 py-1.5 rounded-full text-amber-400 text-xs sm:text-sm font-semibold tracking-wider uppercase">
+                            <i class="fa-solid fa-certificate"></i>
+                            <span>Menyambut Hari Raya Idul Adha & Kebahagiaan Buah Hati</span>
+                        </span>
+                        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight">
+                            Ibadah Nyaman, Hewan <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-200">Syar'i & Berkualitas</span>
+                        </h1>
+                        <p class="text-slate-300 text-base sm:text-lg max-w-xl">
+                            Kemil Gemilang menyediakan sapi, kambing, dan domba pilihan terbaik yang dirawat secara profesional. Kami menjamin kesesuaian syariah, bobot timbangan yang jujur, serta kesehatan hewan bersertifikat resmi.
+                        </p>
+                        <!-- Actions -->
+                        <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
+                            <a href="#katalog" onclick="document.getElementById('katalog').scrollIntoView({behavior: 'smooth'})" class="px-8 py-4 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-center transition-all shadow-lg shadow-amber-500/20 flex items-center justify-center space-x-2">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                                <span>Pilih Hewan Qurban</span>
+                            </a>
+                            <button onclick="showSection('aqiqah-custom')" class="px-8 py-4 rounded-xl bg-emerald-800 hover:bg-emerald-700 border border-emerald-700 font-bold text-center transition-all flex items-center justify-center space-x-2">
+                                <i class="fa-solid fa-baby-carriage"></i>
+                                <span>Kustomisasi Aqiqah</span>
+                            </button>
+                        </div>
+                        <!-- Features badge in hero -->
+                        <div class="pt-4 grid grid-cols-3 gap-4 border-t border-emerald-800/60">
+                            <div>
+                                <h4 class="text-amber-400 font-bold text-lg sm:text-2xl">100%</h4>
+                                <p class="text-slate-400 text-xs sm:text-sm">Sesuai Syariat</p>
+                            </div>
+                            <div>
+                                <h4 class="text-amber-400 font-bold text-lg sm:text-2xl">Bebas PMK</h4>
+                                <p class="text-slate-400 text-xs sm:text-sm">Garansi Sehat</p>
+                            </div>
+                            <div>
+                                <h4 class="text-amber-400 font-bold text-lg sm:text-2xl">Gratis</h4>
+                                <p class="text-slate-400 text-xs sm:text-sm">Pakan & Rawat</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Hero Image / Visual Mockup -->
+                    <div class="lg:col-span-5 relative flex justify-center">
+                        <div class="relative w-full max-w-md">
+                            <div class="absolute inset-0 bg-gradient-to-tr from-emerald-800 to-transparent rounded-3xl transform rotate-6 scale-95 opacity-50 blur-lg"></div>
+                            <div class="bg-gradient-to-br from-emerald-900 to-emerald-950 p-6 rounded-3xl border border-emerald-800 shadow-2xl relative overflow-hidden">
+                                <div class="absolute top-0 right-0 bg-amber-50 text-slate-950 text-xs font-black uppercase px-4 py-2 rounded-bl-2xl">
+                                    Unggulan 2026
+                                </div>
+                                <img src="https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?auto=format&fit=crop&w=600&q=80" 
+                                     alt="Premium Cattle" 
+                                     onerror="this.src='https://placehold.co/600x400/064e3b/fbbf24?text=Hewan+Kemil+Gemilang'"
+                                     class="w-full h-56 object-cover rounded-2xl mb-6 shadow-md border border-emerald-800">
+                                <div class="space-y-3">
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-sm font-bold text-amber-400">SAPI LIMOUSIN SUPER (KG-08)</span>
+                                        <span class="bg-emerald-850 text-emerald-100 text-xs px-2.5 py-1 rounded-full font-semibold">Tersedia</span>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-2 text-xs text-slate-300">
+                                        <div class="flex items-center"><i class="fa-solid fa-weight-hanging text-amber-500 mr-2 w-4"></i>680 kg (Bobot Riil)</div>
+                                        <div class="flex items-center"><i class="fa-solid fa-notes-medical text-amber-500 mr-2 w-4"></i>Bebas PMK & Sehat</div>
+                                        <div class="flex items-center"><i class="fa-solid fa-cake-candles text-amber-500 mr-2 w-4"></i>Umur > 2.5 Tahun</div>
+                                        <div class="flex items-center"><i class="fa-solid fa-shield-halved text-amber-500 mr-2 w-4"></i>Sertifikat Dinas</div>
+                                    </div>
+                                    <div class="pt-4 border-t border-emerald-800 flex items-center justify-between">
+                                        <div>
+                                            <p class="text-xs text-slate-400">Harga Spesial</p>
+                                            <p class="text-xl font-extrabold text-white">Rp 34.500.000</p>
+                                        </div>
+                                        <button onclick="addToCart('S08')" class="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-sm transition-colors shadow-md">
+                                            Beli Sekarang
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trust Pillars / Key Benefits -->
+            <div class="py-12 bg-white border-b border-slate-100">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-4 gap-8">
+                    <!-- Pillar 1 -->
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-800 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-scale-balanced text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-slate-900">Timbangan Jujur</h3>
+                            <p class="text-slate-500 text-sm mt-1">Bobot riil ditimbang langsung di depan Anda atau melalui video live.</p>
+                        </div>
+                    </div>
+                    <!-- Pillar 2 -->
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-800 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-truck-fast text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-slate-900">Gratis Pengiriman</h3>
+                            <p class="text-slate-500 text-sm mt-1">Pengantaran gratis ke Jabodetabek langsung menggunakan armada sendiri.</p>
+                        </div>
+                    </div>
+                    <!-- Pillar 3 -->
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-800 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-shield-check text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-slate-900">Pakan & Rawat Gratis</h3>
+                            <p class="text-slate-500 text-sm mt-1">Hewan dititipkan dan dirawat gratis hingga hari pengantaran H-1.</p>
+                        </div>
+                    </div>
+                    <!-- Pillar 4 -->
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-800 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-mosque text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-slate-900">Jaminan Syari'ah</h3>
+                            <p class="text-slate-500 text-sm mt-1">Memenuhi syarat umur minimal, kesehatan prima, dan kelengkapan fisik.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Catalog & Shop Section -->
+            <div id="katalog" class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-24">
+                <div class="text-center max-w-3xl mx-auto mb-12">
+                    <span class="text-emerald-800 font-bold uppercase text-sm tracking-widest block mb-2">Pilihan Hewan Terbaik</span>
+                    <h2 class="text-3xl sm:text-4xl font-black text-slate-900">Katalog Hewan Qurban 2026</h2>
+                    <p class="text-slate-500 mt-2">Semua hewan qurban kami telah lolos uji kesehatan klinis, bebas dari Penyakit Mulut dan Kuku (PMK) & LSD, serta dirawat dengan pakan bernutrisi tinggi.</p>
+                </div>
+
+                <!-- Catalog Controls (Filters & Search) -->
+                <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-100 mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <!-- Filters -->
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="filterCatalog('all')" id="filter-all" class="filter-btn px-5 py-2.5 rounded-xl font-semibold text-sm transition-all bg-emerald-800 text-white shadow-sm">
+                            Semua Hewan
+                        </button>
+                        <button onclick="filterCatalog('sapi')" id="filter-sapi" class="filter-btn px-5 py-2.5 rounded-xl font-semibold text-sm transition-all bg-slate-100 text-slate-600 hover:bg-slate-200">
+                            Sapi
+                        </button>
+                        <button onclick="filterCatalog('kambing')" id="filter-kambing" class="filter-btn px-5 py-2.5 rounded-xl font-semibold text-sm transition-all bg-slate-100 text-slate-600 hover:bg-slate-200">
+                            Kambing
+                        </button>
+                        <button onclick="filterCatalog('domba')" id="filter-domba" class="filter-btn px-5 py-2.5 rounded-xl font-semibold text-sm transition-all bg-slate-100 text-slate-600 hover:bg-slate-200">
+                            Domba Garut/Gembel
+                        </button>
+                    </div>
+
+                    <!-- Search -->
+                    <div class="relative max-w-md w-full">
+                        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                        <input type="text" id="search-input" oninput="searchCatalog()" placeholder="Cari kode hewan atau jenis (misal: Limousin)..." class="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-800 transition-all text-sm">
+                    </div>
+                </div>
+
+                <!-- Product Grid -->
+                <div id="product-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Dynamic rendering by JS -->
+                </div>
+            </div>
+
+            <!-- Testimonial Section -->
+            <div id="testimoni" class="bg-slate-100 py-16">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center max-w-3xl mx-auto mb-12">
+                        <span class="text-amber-600 font-bold uppercase text-sm tracking-widest block mb-2">Testimoni Pequrban</span>
+                        <h2 class="text-3xl font-black text-slate-900">Apa Kata Mereka Tentang Kami?</h2>
+                        <p class="text-slate-500 mt-2">Kepuasan dan kenyamanan ibadah Anda adalah amanah terbesar bagi tim Kemil Gemilang.</p>
+                    </div>
+
+                    <div class="grid md:grid-cols-3 gap-8">
+                        <!-- Testimonial 1 -->
+                        <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between">
+                            <div class="space-y-4">
+                                <div class="flex text-amber-400">
+                                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                                </div>
+                                <p class="text-slate-600 italic">"Alhamdulillah tahun lalu beli Sapi Limousin di Kemil Gemilang. Prosesnya transparan sekali, bobot sapi ditimbang live pas mau dikirim. Kondisi sapinya sangat gemuk, bersih, dan sehat. Rekomen banget!"</p>
+                            </div>
+                            <div class="flex items-center space-x-4 mt-6 pt-6 border-t border-slate-100">
+                                <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold">BP</div>
+                                <div>
+                                    <h4 class="font-bold text-slate-950">Bapak Pratama</h4>
+                                    <p class="text-xs text-slate-500">Pekurban Sapi Jabodetabek</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Testimonial 2 -->
+                        <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between">
+                            <div class="space-y-4">
+                                <div class="flex text-amber-400">
+                                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                                </div>
+                                <p class="text-slate-600 italic">"Saya memesan paket Aqiqah anak kedua laki-laki (2 kambing). Pengolahannya sangat rapi, masakan sate dan gule rasanya enak sekali, tidak bau prengus sama sekali. Dus kotaknya juga eksklusif."</p>
+                            </div>
+                            <div class="flex items-center space-x-4 mt-6 pt-6 border-t border-slate-100">
+                                <div class="w-10 h-10 rounded-full bg-amber-100 text-amber-800 flex items-center justify-center font-bold">IB</div>
+                                <div>
+                                    <h4 class="font-bold text-slate-950">Ibu Barkah</h4>
+                                    <p class="text-xs text-slate-500">Aqiqah Paket Platinum</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Testimonial 3 -->
+                        <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between">
+                            <div class="space-y-4">
+                                <div class="flex text-amber-400">
+                                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                                </div>
+                                <p class="text-slate-600 italic">"Paling senang dengan kepastian syariat dan sertifikat kesehatannya. Kami jadi tenang karena hewan qurban benar-benar sehat dan layak kurban. CS-nya juga sangat ramah dan komunikatif."</p>
+                            </div>
+                            <div class="flex items-center space-x-4 mt-6 pt-6 border-t border-slate-100">
+                                <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold">AH</div>
+                                <div>
+                                    <h4 class="font-bold text-slate-950">Ustadz Ahmad</h4>
+                                    <p class="text-xs text-slate-500">Pengurus Masjid Al-Ikhlas</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: AQIQAH CUSTOMIZER -->
+        <section id="section-aqiqah-custom" class="hidden py-16 animate-fadeIn">
+            <div class="max-w-5xl mx-auto px-4 sm:px-6">
+                <div class="text-center max-w-2xl mx-auto mb-12">
+                    <span class="text-emerald-800 font-bold uppercase text-sm tracking-widest block mb-2">Layanan Aqiqah Praktis</span>
+                    <h2 class="text-3xl font-black text-slate-900">Custom Desain Paket Aqiqah</h2>
+                    <p class="text-slate-500 mt-2">Sesuaikan jenis hewan aqiqah, jumlah kambing/domba, serta opsi pengolahan hidangan siap saji untuk keberkahan buah hati Anda.</p>
+                </div>
+
+                <div class="grid md:grid-cols-12 gap-8 items-start">
+                    <!-- Wizard Panel -->
+                    <div class="md:col-span-7 bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/80 shadow-md space-y-8">
+                        <!-- Step 1: Gender Bayi -->
+                        <div>
+                            <label class="block text-sm font-bold text-slate-900 mb-3"><span class="text-emerald-800 mr-2">1.</span>Jenis Kelamin Bayi</label>
+                            <div class="grid grid-cols-2 gap-4">
+                                <label class="border-2 rounded-2xl p-4 flex flex-col items-center justify-center cursor-pointer transition-all hover:border-emerald-800 border-slate-200" id="gender-male-label">
+                                    <input type="radio" name="aqiqah-gender" value="male" checked class="sr-only" onchange="updateAqiqahCalculator()">
+                                    <i class="fa-solid fa-baby text-blue-500 text-3xl mb-2"></i>
+                                    <span class="font-bold text-slate-900">Laki-Laki</span>
+                                    <span class="text-xs text-slate-500 mt-1">Sesuai Syariat: 2 Kambing</span>
+                                </label>
+                                <label class="border-2 rounded-2xl p-4 flex flex-col items-center justify-center cursor-pointer transition-all hover:border-emerald-800 border-slate-200" id="gender-female-label">
+                                    <input type="radio" name="aqiqah-gender" value="female" class="sr-only" onchange="updateAqiqahCalculator()">
+                                    <i class="fa-solid fa-baby text-pink-500 text-3xl mb-2"></i>
+                                    <span class="font-bold text-slate-900">Perempuan</span>
+                                    <span class="text-xs text-slate-500 mt-1">Sesuai Syariat: 1 Kambing</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Jenis Hewan -->
+                        <div>
+                            <label class="block text-sm font-bold text-slate-900 mb-3"><span class="text-emerald-800 mr-2">2.</span>Kategori Hewan Aqiqah</label>
+                            <div class="grid grid-cols-2 gap-4">
+                                <label class="border-2 rounded-2xl p-4 flex flex-col items-center justify-center cursor-pointer transition-all hover:border-emerald-800 border-slate-200" id="aqiqah-type-kambing-label">
+                                    <input type="radio" name="aqiqah-animal" value="kambing" checked class="sr-only" onchange="updateAqiqahCalculator()">
+                                    <span class="font-bold text-slate-900 text-base">Kambing Etawa</span>
+                                    <span class="text-xs text-slate-500 mt-1">Daging Tebal & Berisi</span>
+                                </label>
+                                <label class="border-2 rounded-2xl p-4 flex flex-col items-center justify-center cursor-pointer transition-all hover:border-emerald-800 border-slate-200" id="aqiqah-type-domba-label">
+                                    <input type="radio" name="aqiqah-animal" value="domba" class="sr-only" onchange="updateAqiqahCalculator()">
+                                    <span class="font-bold text-slate-900 text-base">Domba Gembel</span>
+                                    <span class="text-xs text-slate-500 mt-1">Daging Empuk & Gurih</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Opsi Pengolahan -->
+                        <div>
+                            <label class="block text-sm font-bold text-slate-900 mb-3"><span class="text-emerald-800 mr-2">3.</span>Jenis Pengolahan Daging</label>
+                            <div class="space-y-3">
+                                <label class="flex items-center p-4 border rounded-2xl cursor-pointer hover:bg-slate-50 transition-all border-slate-200" id="process-raw-label">
+                                    <input type="radio" name="aqiqah-process" value="raw" class="text-emerald-800 focus:ring-emerald-800 mr-4" onchange="updateAqiqahCalculator()">
+                                    <div>
+                                        <p class="font-bold text-slate-950 text-sm sm:text-base">Karkas Mentah & Bersih</p>
+                                        <p class="text-xs text-slate-500">Daging dipotong rapi, dibersihkan, dimasukkan plastik higienis per kilo.</p>
+                                    </div>
+                                </label>
+                                <label class="flex items-center p-4 border rounded-2xl cursor-pointer hover:bg-slate-50 transition-all border-emerald-800 bg-emerald-50/20" id="process-cooked-label">
+                                    <input type="radio" name="aqiqah-process" value="cooked" checked class="text-emerald-800 focus:ring-emerald-800 mr-4" onchange="updateAqiqahCalculator()">
+                                    <div>
+                                        <p class="font-bold text-slate-950 text-sm sm:text-base">Dimasak Matang (Sate + Gulai)</p>
+                                        <p class="text-xs text-slate-500">Diolah koki berpengalaman menjadi Sate Empuk, Gulai Gurih, atau Semur (Bebas Prengus).</p>
+                                    </div>
+                                </label>
+                                <label class="flex items-center p-4 border rounded-2xl cursor-pointer hover:bg-slate-50 transition-all border-slate-200" id="process-box-label">
+                                    <input type="radio" name="aqiqah-process" value="box" class="text-emerald-800 focus:ring-emerald-800 mr-4" onchange="updateAqiqahCalculator()">
+                                    <div>
+                                        <p class="font-bold text-slate-950 text-sm sm:text-base">Paket Nasi Box Premium</p>
+                                        <p class="text-xs text-slate-500">Nasi Box lengkap dengan Lauk Sate, Gule, Telur Pindang, Kerupuk, Risalah Aqiqah, Alat Makan.</p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Box Quantity (If Nasi Box Selected) -->
+                        <div id="box-quantity-wrapper" class="hidden bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2">
+                            <label class="block text-sm font-bold text-slate-900">Jumlah Nasi Box</label>
+                            <div class="flex items-center space-x-4">
+                                <input type="number" id="aqiqah-box-count" value="50" min="20" max="250" class="w-24 px-3 py-2 border rounded-xl focus:outline-emerald-800 text-center font-bold" oninput="updateAqiqahCalculator()">
+                                <span class="text-xs text-slate-500">Minimal pemesanan 20 Box. Harga per box Rp 18.000,- (sudah termasuk olahan daging)</span>
+                            </div>
+                        </div>
+
+                        <!-- Step 4: Informasi Bayi -->
+                        <div class="space-y-4">
+                            <label class="block text-sm font-bold text-slate-900"><span class="text-emerald-800 mr-2">4.</span>Informasi untuk Cetak Risalah Aqiqah</label>
+                            <div class="grid sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs text-slate-500 mb-1">Nama Lengkap Bayi</label>
+                                    <input type="text" id="aqiqah-baby-name" placeholder="Contoh: Muhammad Ghazi Gemilang" class="w-full px-3 py-2.5 border border-slate-200 rounded-xl focus:outline-emerald-800 text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-slate-500 mb-1">Nama Ayah & Ibu</label>
+                                    <input type="text" id="aqiqah-parents-name" placeholder="Contoh: Ahmad & Siti" class="w-full px-3 py-2.5 border border-slate-200 rounded-xl focus:outline-emerald-800 text-sm">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Receipt Preview / Price Card -->
+                    <div class="md:col-span-5 bg-gradient-to-b from-emerald-900 to-emerald-950 text-white rounded-3xl p-6 sm:p-8 shadow-xl border border-emerald-800 sticky top-24">
+                        <h3 class="text-xl font-bold border-b border-emerald-800 pb-4 mb-6 flex items-center justify-between">
+                            <span>Estimasi Paket</span>
+                            <i class="fa-solid fa-file-invoice-dollar text-amber-400"></i>
+                        </h3>
+                        
+                        <div class="space-y-4 text-sm" id="aqiqah-summary-details">
+                            <!-- Dynamic Content -->
+                        </div>
+
+                        <div class="border-t border-emerald-800/80 pt-6 mt-6 flex justify-between items-end">
+                            <div>
+                                <p class="text-xs text-slate-400">Total Harga Paket</p>
+                                <p class="text-3xl font-black text-amber-400" id="aqiqah-calc-total">Rp 0</p>
+                            </div>
+                        </div>
+
+                        <button onclick="addAqiqahToCart()" class="w-full mt-6 py-4 rounded-2xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-center transition-all shadow-md shadow-amber-500/15 flex items-center justify-center space-x-2">
+                            <i class="fa-solid fa-cart-plus"></i>
+                            <span>Masukkan ke Keranjang</span>
+                        </button>
+
+                        <p class="text-center text-[11px] text-slate-400 mt-4">
+                            <i class="fa-solid fa-circle-info mr-1 text-amber-400"></i> Opsi Aqiqah sudah termasuk sertifikat cetak, dokumentasi pemotongan (video), pengiriman gratis, dan pencukuran rambut bayi (opsional).
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: ORDER TRACKER -->
+        <section id="section-tracking" class="hidden py-16 animate-fadeIn">
+            <div class="max-w-3xl mx-auto px-4 sm:px-6">
+                <div class="bg-white p-8 rounded-3xl shadow-md border border-slate-200/80">
+                    <div class="text-center max-w-xl mx-auto mb-8">
+                        <div class="w-16 h-16 rounded-2xl bg-amber-50 text-amber-500 flex items-center justify-center mx-auto mb-4">
+                            <i class="fa-solid fa-truck-ramp-box text-3xl"></i>
+                        </div>
+                        <h2 class="text-3xl font-black text-slate-900">Lacak Pesanan Anda</h2>
+                        <p class="text-slate-500 mt-2">Masukkan nomor Invoice / Order ID Kemil Gemilang untuk memantau status pembayaran, pemotongan, dan pengantaran hewan qurban/aqiqah Anda.</p>
+                    </div>
+
+                    <!-- Search Input Form -->
+                    <div class="space-y-4 max-w-md mx-auto">
+                        <div class="flex gap-2">
+                            <input type="text" id="track-id-input" placeholder="Contoh: KG-98242" class="flex-grow px-4 py-3 border rounded-xl focus:outline-emerald-800 text-center font-bold uppercase tracking-wider">
+                            <button onclick="handleTrackOrder()" class="px-6 py-3 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl font-bold transition-colors">
+                                Lacak
+                            </button>
+                        </div>
+                        <div class="text-center">
+                            <button onclick="fillSampleTrackID()" class="text-xs text-emerald-800 font-semibold hover:underline">Gunakan ID Contoh (Simulasi)</button>
+                        </div>
+                    </div>
+
+                    <!-- Track Result Container -->
+                    <div id="track-result-container" class="mt-8 border-t pt-8 hidden">
+                        <!-- Dynamic Info injected by JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: TABUNGAN QURBAN -->
+        <section id="section-tabungan" class="hidden py-16 animate-fadeIn">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6">
+                <div class="text-center max-w-3xl mx-auto mb-12">
+                    <span class="text-emerald-800 font-bold uppercase text-sm tracking-widest block mb-2">Perencanaan Keuangan Syariah</span>
+                    <h2 class="text-3xl sm:text-4xl font-black text-slate-900">Program Tabungan Qurban</h2>
+                    <p class="text-slate-500 mt-2">Dapatkan jaminan ketersediaan hewan kurban terbaik dengan menyisihkan dana bulanan secara ringan, 100% amanah, tanpa bunga (0%), dan jaminan harga mengikat.</p>
+                </div>
+
+                <div class="grid lg:grid-cols-12 gap-8 items-start">
+                    <!-- Column Left: Interactive Planner -->
+                    <div class="lg:col-span-5 bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-md space-y-6">
+                        <h3 class="text-lg font-bold text-slate-950 flex items-center gap-2 border-b pb-3">
+                            <i class="fa-solid fa-calculator text-emerald-800"></i>
+                            <span>Simulasi Tabungan Baru</span>
+                        </h3>
+
+                        <!-- Target Animal -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Pilih Hewan Qurban Sasaran</label>
+                            <select id="savings-animal-select" onchange="updateSavingsCalculator()" class="w-full px-3 py-3 border border-slate-200 rounded-xl focus:outline-emerald-800 text-sm font-semibold bg-slate-50">
+                                <!-- Loaded dynamically via JS -->
+                            </select>
+                        </div>
+
+                        <!-- Target Period -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Pilihan Durasi / Tenor Tabungan</label>
+                            <select id="savings-duration-select" onchange="updateSavingsCalculator()" class="w-full px-3 py-3 border border-slate-200 rounded-xl focus:outline-emerald-800 text-sm font-semibold bg-slate-50">
+                                <option value="3">3 Bulan (Jangka Pendek)</option>
+                                <option value="6">6 Bulan (Tengah Tahun)</option>
+                                <option value="10" selected>10 Bulan (Rekomendasi Utama)</option>
+                                <option value="12">12 Bulan (Maksimal)</option>
+                            </select>
+                        </div>
+
+                        <!-- Calculation Output -->
+                        <div class="bg-emerald-950 text-white p-5 rounded-2xl space-y-4 shadow-inner">
+                            <div class="flex justify-between items-center text-xs text-slate-300">
+                                <span>Harga Kunci Saat Ini</span>
+                                <span id="savings-target-price" class="text-sm font-extrabold text-amber-400">Rp 0</span>
+                            </div>
+                            <div class="border-t border-emerald-800 pt-3 flex justify-between items-center">
+                                <div>
+                                    <span class="text-[10px] uppercase text-slate-400 font-bold block">Angsuran Bulanan</span>
+                                    <span id="savings-monthly-estimate" class="text-lg font-black text-white">Rp 0</span>
+                                </div>
+                                <div class="text-right">
+                                    <span class="text-[10px] uppercase text-slate-400 font-bold block">Angsuran Mingguan</span>
+                                    <span id="savings-weekly-estimate" class="text-sm font-semibold text-amber-400">Rp 0</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Form Bio -->
+                        <div class="space-y-3 pt-3 border-t">
+                            <h4 class="font-bold text-slate-900 text-xs uppercase tracking-wider">Identitas Calon Nasabah</h4>
+                            <input type="text" id="savings-cust-name" placeholder="Nama Lengkap Anda" class="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-emerald-800">
+                            <input type="text" id="savings-cust-phone" placeholder="No. WhatsApp Aktif" class="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-emerald-800">
+                            
+                            <div>
+                                <label class="block text-[10px] text-slate-400 font-bold uppercase mb-1">Setoran Awal (Min. 1 Bulan Angsuran)</label>
+                                <input type="number" id="savings-initial-deposit" placeholder="Nominal Setoran Awal (Rp)" class="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-emerald-800 font-semibold">
+                            </div>
+                        </div>
+
+                        <button onclick="startNewSavingsPlan()" class="w-full py-3.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-black rounded-xl transition-colors shadow-md shadow-amber-500/10 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-piggy-bank"></i>
+                            <span>Buka Rekening Tabungan</span>
+                        </button>
+                    </div>
+
+                    <!-- Column Right: Active Tabungan Dashboard -->
+                    <div class="lg:col-span-7 space-y-6">
+                        <!-- Advantages banner -->
+                        <div class="bg-gradient-to-r from-emerald-800 to-emerald-950 text-white p-6 rounded-3xl shadow-sm border border-emerald-700/30">
+                            <h3 class="font-extrabold text-base mb-3"><i class="fa-solid fa-shield-halved text-amber-400 mr-2"></i>Keuntungan Tabungan Kemil Gemilang</h3>
+                            <ul class="space-y-2 text-xs text-slate-300">
+                                <li class="flex items-center gap-2.5"><i class="fa-solid fa-circle-check text-amber-400 shrink-0"></i><span><strong>Harga Terkunci:</strong> Harga kurban tetap mengacu pada awal pendaftaran, terhindar dari lonjakan harga musiman H-7 Idul Adha.</span></li>
+                                <li class="flex items-center gap-2.5"><i class="fa-solid fa-circle-check text-amber-400 shrink-0"></i><span><strong>Gratis Pemeliharaan:</strong> Hewan tetap dirawat, diberi pakan premium, serta diawasi dokter hewan gratis di kandang Kemil Gemilang hingga hari pengiriman.</span></li>
+                                <li class="flex items-center gap-2.5"><i class="fa-solid fa-circle-check text-amber-400 shrink-0"></i><span><strong>Kemudahan Bayar:</strong> Setoran fleksibel dapat disimulasikan kapan pun secara otomatis melalui portal dasbor di bawah ini.</span></li>
+                            </ul>
+                        </div>
+
+                        <!-- Active Plans Container -->
+                        <div class="space-y-4">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                <h3 class="font-black text-slate-950 text-lg flex items-center gap-2">
+                                    <i class="fa-solid fa-vault text-emerald-800"></i>
+                                    <span>Dasbor Tabungan Aktif Saya (Simulasi Portal)</span>
+                                </h3>
+                                <!-- Search Tabungan -->
+                                <div class="relative max-w-xs w-full">
+                                    <input type="text" id="search-tabungan-input" oninput="filterSavingsDashboard()" placeholder="Cari ID Tabungan..." class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl focus:outline-emerald-800 text-xs font-semibold">
+                                </div>
+                            </div>
+
+                            <div id="savings-dashboard-list" class="space-y-5">
+                                <!-- Rendered dynamically by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- SLIDE-OVER DRAWER: SHOPPING CART -->
+    <div id="cart-drawer" class="fixed inset-0 z-50 overflow-hidden hidden" aria-labelledby="slide-over-title" role="dialog" aria-modal="true">
+        <div class="absolute inset-0 overflow-hidden">
+            <!-- Overlay backdrop -->
+            <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity" onclick="toggleCart()"></div>
+
+            <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
+                <div class="pointer-events-auto w-screen max-w-md">
+                    <div class="flex h-full flex-col overflow-y-scroll bg-white shadow-2xl custom-scroll">
+                        <!-- Drawer Header -->
+                        <div class="bg-emerald-950 text-white px-6 py-5 flex items-center justify-between">
+                            <div class="flex items-center space-x-2">
+                                <i class="fa-solid fa-basket-shopping text-xl text-amber-400"></i>
+                                <span class="text-lg font-bold">Keranjang Belanja</span>
+                            </div>
+                            <button type="button" class="text-slate-400 hover:text-white" onclick="toggleCart()">
+                                <i class="fa-solid fa-xmark text-xl"></i>
+                            </button>
+                        </div>
+
+                        <!-- Drawer Body -->
+                        <div class="flex-1 py-6 px-4 sm:px-6">
+                            <!-- Items List -->
+                            <div id="cart-items-list" class="space-y-6">
+                                <!-- Dynamic JS elements -->
+                            </div>
+
+                            <!-- Empty State -->
+                            <div id="cart-empty-state" class="text-center py-16 space-y-4">
+                                <i class="fa-solid fa-cow text-5xl text-slate-300"></i>
+                                <p class="text-slate-500 font-medium">Keranjang Anda masih kosong.</p>
+                                <button onclick="toggleCart(); showSection('home')" class="text-emerald-800 font-bold text-sm hover:underline">Lihat Katalog Hewan</button>
+                            </div>
+                        </div>
+
+                        <!-- Drawer Footer -->
+                        <div class="border-t border-slate-200 py-6 px-4 sm:px-6 bg-slate-50">
+                            <div class="space-y-1.5 text-sm mb-4">
+                                <div class="flex justify-between text-slate-500">
+                                    <span>Subtotal</span>
+                                    <span id="cart-subtotal">Rp 0</span>
+                                </div>
+                                <div class="flex justify-between text-slate-500">
+                                    <span>Pakan & Perawatan</span>
+                                    <span class="text-emerald-800 font-semibold">GRATIS</span>
+                                </div>
+                                <div class="flex justify-between text-slate-500">
+                                    <span>Ongkos Kirim</span>
+                                    <span class="text-emerald-800 font-semibold">GRATIS</span>
+                                </div>
+                                <div class="flex justify-between text-base font-black text-slate-950 pt-3 border-t">
+                                    <span>Total Tagihan</span>
+                                    <span id="cart-total" class="text-emerald-900">Rp 0</span>
+                                </div>
+                            </div>
+
+                            <button id="checkout-btn" onclick="openCheckoutModal()" class="w-full py-4 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-center shadow-lg shadow-amber-500/10 transition-colors" disabled>
+                                Lanjut ke Pembayaran
+                            </button>
+                            <p class="text-center text-[10px] text-slate-400 mt-2">
+                                Transaksi aman & mematuhi syarat Shariah.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ANIMAL DETAIL MODAL -->
+    <div id="detail-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto custom-scroll shadow-2xl transform transition-transform duration-300 scale-95" id="detail-modal-card">
+            <div id="detail-modal-content">
+                <!-- Injected dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- CHECKOUT WIZARD MODAL -->
+    <div id="checkout-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-y-auto custom-scroll shadow-2xl">
+            <!-- Modal Header -->
+            <div class="bg-emerald-950 text-white px-6 py-4 flex items-center justify-between sticky top-0 z-10">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-cash-register text-amber-400"></i>
+                    <h3 class="font-extrabold text-lg">Checkout Pembayaran - Kemil Gemilang</h3>
+                </div>
+                <button onclick="closeCheckoutModal()" class="text-slate-400 hover:text-white">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Modal Body (Split Layout) -->
+            <div class="grid md:grid-cols-12">
+                <!-- Left: Form Steps -->
+                <div class="md:col-span-7 p-6 sm:p-8 space-y-6 border-r border-slate-100">
+                    <!-- Steps Indicator -->
+                    <div class="flex items-center space-x-4 border-b pb-4">
+                        <div class="flex items-center space-x-2">
+                            <span id="step-1-badge" class="w-6 h-6 rounded-full bg-emerald-800 text-white font-bold text-xs flex items-center justify-center">1</span>
+                            <span class="text-sm font-bold text-slate-900">Data Pengiriman & Niat</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-xs text-slate-300"></i>
+                        <div class="flex items-center space-x-2">
+                            <span id="step-2-badge" class="w-6 h-6 rounded-full bg-slate-200 text-slate-600 font-bold text-xs flex items-center justify-center">2</span>
+                            <span class="text-sm font-semibold text-slate-500">Metode Pembayaran</span>
+                        </div>
+                    </div>
+
+                    <!-- STEP 1 CONTAINER -->
+                    <div id="checkout-step-1" class="space-y-4">
+                        <div class="space-y-3">
+                            <h4 class="font-bold text-slate-900">Informasi Pembeli</h4>
+                            <div class="grid sm:grid-cols-2 gap-3">
+                                <input type="text" id="cust-name" placeholder="Nama Lengkap Pembeli" class="px-3 py-2.5 border border-slate-200 rounded-xl focus:outline-emerald-800 text-sm w-full">
+                                <input type="text" id="cust-phone" placeholder="No. WhatsApp Aktif" class="px-3 py-2.5 border border-slate-200 rounded-xl focus:outline-emerald-800 text-sm w-full">
+                            </div>
+                            <input type="email" id="cust-email" placeholder="Alamat Email (Untuk kirim Invoice)" class="px-3 py-2.5 border border-slate-200 rounded-xl focus:outline-emerald-800 text-sm w-full">
+                        </div>
+
+                        <div class="space-y-3 pt-3 border-t">
+                            <h4 class="font-bold text-slate-900">Alamat Pengiriman</h4>
+                            <textarea id="cust-address" placeholder="Tuliskan alamat lengkap pengiriman hewan..." rows="3" class="px-3 py-2.5 border border-slate-200 rounded-xl focus:outline-emerald-800 text-sm w-full"></textarea>
+                            <div class="grid sm:grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs text-slate-500 mb-1">Tanggal Pengantaran</label>
+                                    <input type="date" id="delivery-date" class="px-3 py-2.5 border border-slate-200 rounded-xl focus:outline-emerald-800 text-sm w-full">
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-slate-500 mb-1">Pilihan Pengantaran</label>
+                                    <select id="delivery-option" class="px-3 py-2.5 border border-slate-200 rounded-xl focus:outline-emerald-800 text-sm w-full">
+                                        <option value="kirim">Kirim Hidup ke Alamat Pembeli</option>
+                                        <option value="salur">Salurkan via Yayasan Mitra Kami</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button onclick="goToStep2()" class="w-full py-3 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl font-bold transition-colors">
+                            Lanjut ke Metode Pembayaran
+                        </button>
+                    </div>
+
+                    <!-- STEP 2 CONTAINER -->
+                    <div id="checkout-step-2" class="space-y-4 hidden">
+                        <div class="space-y-3">
+                            <h4 class="font-bold text-slate-900">Pilih Metode Pembayaran</h4>
+                            
+                            <!-- Payment Options -->
+                            <div class="space-y-2">
+                                <label class="flex items-center justify-between p-4 border-2 border-emerald-800 bg-emerald-50/20 rounded-xl cursor-pointer" id="pay-qris">
+                                    <div class="flex items-center">
+                                        <input type="radio" name="pay-method" value="QRIS" checked class="text-emerald-800 mr-3" onchange="selectPaymentMethod('QRIS')">
+                                        <div>
+                                            <p class="font-bold text-slate-950 text-sm">QRIS Instant (Rekomendasi)</p>
+                                            <p class="text-xs text-slate-500">Konfirmasi otomatis cepat & mendukung e-wallet.</p>
+                                        </div>
+                                    </div>
+                                    <i class="fa-solid fa-qrcode text-xl text-slate-500"></i>
+                                </label>
+
+                                <label class="flex items-center justify-between p-4 border border-slate-200 rounded-xl cursor-pointer" id="pay-bca">
+                                    <div class="flex items-center">
+                                        <input type="radio" name="pay-method" value="BCA Virtual Account" class="text-emerald-800 mr-3" onchange="selectPaymentMethod('BCA')">
+                                        <div>
+                                            <p class="font-bold text-slate-950 text-sm">BCA Virtual Account</p>
+                                            <p class="text-xs text-slate-500">Proses transfer instan 24 jam.</p>
+                                        </div>
+                                    </div>
+                                    <span class="font-black text-blue-600 text-sm tracking-widest">BCA</span>
+                                </label>
+
+                                <label class="flex items-center justify-between p-4 border border-slate-200 rounded-xl cursor-pointer" id="pay-mandiri">
+                                    <div class="flex items-center">
+                                        <input type="radio" name="pay-method" value="Mandiri Virtual Account" class="text-emerald-800 mr-3" onchange="selectPaymentMethod('Mandiri')">
+                                        <div>
+                                            <p class="font-bold text-slate-950 text-sm">Mandiri Virtual Account</p>
+                                            <p class="text-xs text-slate-500">Konfirmasi langsung otomatis.</p>
+                                        </div>
+                                    </div>
+                                    <span class="font-black text-blue-800 text-sm italic">mandiri</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Simulated Safe Payment Info Badge -->
+                        <div class="bg-amber-50 border border-amber-200 p-3.5 rounded-xl flex items-start space-x-3">
+                            <i class="fa-solid fa-shield-halved text-amber-500 mt-1"></i>
+                            <div class="text-xs text-slate-700">
+                                <p class="font-bold">Keamanan Terjamin & Sesuai Syariat</p>
+                                <p class="mt-0.5">Setelah mengklik konfirmasi, invoice pemesanan Anda akan diterbitkan. Dana Anda akan disimpan di rekening penampungan akad syariah yang aman.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex space-x-3 pt-4 border-t">
+                            <button onclick="goToStep1()" class="w-1/3 py-3 border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-xl font-bold transition-colors">
+                                Kembali
+                            </button>
+                            <button onclick="processOrder()" class="w-2/3 py-3 bg-amber-500 hover:bg-amber-600 text-slate-950 font-black rounded-xl transition-colors shadow-lg shadow-amber-500/10">
+                                Konfirmasi & Bayar Sekarang
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Summary Sidebar -->
+                <div class="md:col-span-5 bg-slate-50 p-6 sm:p-8 flex flex-col justify-between">
+                    <div>
+                        <h4 class="font-bold text-slate-900 border-b pb-3 mb-4">Ringkasan Pembelian</h4>
+                        <div id="checkout-summary-list" class="space-y-4 max-h-[300px] overflow-y-auto custom-scroll pr-1">
+                            <!-- Dynamic Checkout Items -->
+                        </div>
+                    </div>
+
+                    <div class="border-t pt-4 mt-6 space-y-2 text-sm">
+                        <div class="flex justify-between text-slate-500">
+                            <span>Subtotal</span>
+                            <span id="checkout-subtotal" class="font-medium">Rp 0</span>
+                        </div>
+                        <div class="flex justify-between text-slate-500">
+                            <span>Pengiriman & Perawatan</span>
+                            <span class="text-emerald-800 font-semibold">GRATIS</span>
+                        </div>
+                        <div class="flex justify-between text-slate-950 font-black text-lg pt-2 border-t">
+                            <span>Total Pembayaran</span>
+                            <span id="checkout-total" class="text-emerald-900">Rp 0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION 4: INVOICE & ORDER SUCCESS PANEL -->
+    <div id="invoice-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto custom-scroll shadow-2xl p-6 sm:p-8 relative animate-fadeIn">
+            
+            <!-- Confetti / Success header -->
+            <div class="text-center pb-6 border-b">
+                <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center mx-auto mb-3">
+                    <i class="fa-solid fa-circle-check text-4xl"></i>
+                </div>
+                <h3 class="text-2xl font-black text-slate-950">Pesanan Berhasil Dibuat!</h3>
+                <p class="text-slate-500 text-sm mt-1">Selesaikan pembayaran Anda menggunakan detail di bawah ini.</p>
+            </div>
+
+            <!-- INVOICE SHEET -->
+            <div id="invoice-sheet" class="my-6 space-y-6">
+                <!-- Header Info -->
+                <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 bg-slate-50 p-4 rounded-2xl border">
+                    <div>
+                        <p class="text-xs text-slate-400">NOMOR INVOICE</p>
+                        <p id="inv-id" class="text-lg font-black text-slate-900 tracking-wider">KG-XXXXXX</p>
+                    </div>
+                    <div class="sm:text-right">
+                        <p class="text-xs text-slate-400">TANGGAL PEMESANAN</p>
+                        <p id="inv-date" class="text-sm font-bold text-slate-700">Tanggal Hari Ini</p>
+                    </div>
+                </div>
+
+                <!-- Customer Details -->
+                <div class="grid sm:grid-cols-2 gap-4 text-sm border-b pb-6">
+                    <div>
+                        <h5 class="font-bold text-slate-900 mb-1">Informasi Penerima</h5>
+                        <p id="inv-cust-name" class="text-slate-700"></p>
+                        <p id="inv-cust-phone" class="text-slate-500 text-xs"></p>
+                        <p id="inv-cust-email" class="text-slate-500 text-xs"></p>
+                    </div>
+                    <div>
+                        <h5 class="font-bold text-slate-900 mb-1">Alamat & Rencana Kirim</h5>
+                        <p id="inv-cust-address" class="text-slate-700 leading-snug"></p>
+                        <p class="text-emerald-800 font-semibold text-xs mt-1"><i class="fa-regular fa-calendar-check mr-1"></i>Kirim: <span id="inv-delivery-date"></span></p>
+                    </div>
+                </div>
+
+                <!-- Products Table -->
+                <div class="space-y-3">
+                    <h5 class="font-bold text-slate-900 text-sm">Detail Pembelian</h5>
+                    <div id="inv-products-list" class="space-y-3">
+                        <!-- Dynamic items -->
+                    </div>
+                </div>
+
+                <!-- Niat Qurban Banner (Syar'i) -->
+                <div id="inv-niat-section" class="bg-emerald-50 border border-emerald-100 p-4 rounded-2xl">
+                    <p class="font-arabic text-emerald-950 text-right text-lg font-medium leading-relaxed">
+                        بِسْمِ اللَّهِ اللَّهُمَّ تَقَبَّلْ مِنْ ... وَآلِ ...
+                    </p>
+                    <p class="text-xs text-emerald-900 font-medium italic mt-2 text-center" id="inv-niat-text">
+                        "Dengan nama Allah, Ya Allah terimalah qurban dari [Nama Mudhohi]"
+                    </p>
+                </div>
+
+                <!-- Total & Payment Method -->
+                <div class="grid sm:grid-cols-12 gap-6 items-center border-t pt-6">
+                    <div class="sm:col-span-5 text-center sm:text-left">
+                        <p class="text-xs text-slate-400">METODE PEMBAYARAN</p>
+                        <p id="inv-pay-method" class="text-base font-black text-slate-900">QRIS</p>
+                    </div>
+                    <div class="sm:col-span-7 sm:text-right bg-emerald-950 text-white p-4 rounded-2xl">
+                        <p class="text-xs text-slate-300">TOTAL PEMBAYARAN</p>
+                        <p id="inv-total" class="text-2xl font-black text-amber-400">Rp 0</p>
+                    </div>
+                </div>
+
+                <!-- Simulated Interactive Payment Gateway -->
+                <div class="bg-amber-50 border border-amber-200 p-4 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div class="flex items-center space-x-3 text-left">
+                        <i class="fa-regular fa-credit-card text-2xl text-amber-600 shrink-0"></i>
+                        <div>
+                            <p class="text-xs font-bold text-slate-900">Simulasi Pembayaran QRIS/Transfer</p>
+                            <p class="text-[11px] text-slate-500">Silakan klik "Bayar Sekarang" untuk mensimulasikan status pembayaran lunas berhasil secara langsung.</p>
+                        </div>
+                    </div>
+                    <button id="simpay-btn" onclick="simulatePayment()" class="px-5 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl font-bold text-xs transition-colors shadow-sm">
+                        Bayar Sekarang (Simulasi)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Modal Footer Controls -->
+            <div class="flex gap-2 pt-4 border-t sticky bottom-0 bg-white">
+                <button onclick="printInvoice()" class="w-1/2 py-3 border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-xl font-bold text-sm transition-colors flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-print"></i>
+                    <span>Cetak Invoice</span>
+                </button>
+                <button onclick="closeInvoiceModal()" class="w-1/2 py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold text-sm transition-colors text-center">
+                    Kembali ke Beranda
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-emerald-950 text-slate-300 pt-16 pb-8 border-t border-emerald-900 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-4 gap-8 mb-12">
+            <!-- Col 1 -->
+            <div class="space-y-4">
+                <div class="flex items-center space-x-2">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-800 flex items-center justify-center text-amber-400 shadow-md">
+                        <i class="fa-solid fa-cow text-xl"></i>
+                    </div>
+                    <span class="font-extrabold text-white text-lg tracking-wider">KEMIL GEMILANG</span>
+                </div>
+                <p class="text-slate-400 text-sm">Penyedia Hewan Qurban dan Aqiqah tepercaya dengan mengutamakan standar kesehatan prima, kesesuaian syar'i, dan kepuasan pelayanan pelanggan.</p>
+                <div class="flex space-x-3">
+                    <a href="#" class="w-9 h-9 rounded-full bg-emerald-900 hover:bg-emerald-800 flex items-center justify-center text-white transition-colors"><i class="fa-brands fa-whatsapp"></i></a>
+                    <a href="#" class="w-9 h-9 rounded-full bg-emerald-900 hover:bg-emerald-800 flex items-center justify-center text-white transition-colors"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" class="w-9 h-9 rounded-full bg-emerald-900 hover:bg-emerald-800 flex items-center justify-center text-white transition-colors"><i class="fa-brands fa-tiktok"></i></a>
+                </div>
+            </div>
+            <!-- Col 2 -->
+            <div>
+                <h4 class="text-white font-bold mb-4 uppercase text-sm tracking-wider">Navigasi Layanan</h4>
+                <ul class="space-y-2 text-sm text-slate-400">
+                    <li><a href="#katalog" onclick="showSection('home'); setTimeout(() => document.getElementById('katalog').scrollIntoView({behavior: 'smooth'}), 150)" class="hover:text-amber-400 transition-colors">Hewan Qurban</a></li>
+                    <li><a href="#aqiqah" onclick="showSection('aqiqah-custom')" class="hover:text-amber-400 transition-colors">Custom Aqiqah</a></li>
+                    <li><a href="#lacak" onclick="showSection('tracking')" class="hover:text-amber-400 transition-colors">Lacak Status Pengiriman</a></li>
+                    <li><a href="#" class="hover:text-amber-400 transition-colors">Syarat & Ketentuan Kurban</a></li>
+                </ul>
+            </div>
+            <!-- Col 3 -->
+            <div>
+                <h4 class="text-white font-bold mb-4 uppercase text-sm tracking-wider">Pilihan Produk</h4>
+                <ul class="space-y-2 text-sm text-slate-400">
+                    <li><span class="hover:text-amber-400 cursor-pointer">Sapi Limousin & Bali</span></li>
+                    <li><span class="hover:text-amber-400 cursor-pointer">Domba Garut Premium</span></li>
+                    <li><span class="hover:text-amber-400 cursor-pointer">Kambing Etawa Super</span></li>
+                    <li><span class="hover:text-amber-400 cursor-pointer">Paket Aqiqah Nasi Box</span></li>
+                </ul>
+            </div>
+            <!-- Col 4 -->
+            <div>
+                <h4 class="text-white font-bold mb-4 uppercase text-sm tracking-wider">Kontak & Lokasi</h4>
+                <ul class="space-y-3 text-sm text-slate-400">
+                    <li class="flex items-start"><i class="fa-solid fa-location-dot mt-1 mr-3 text-amber-400 shrink-0"></i>Jl. Kandang Gemilang No. 12, Kel. Cisauk, Tangerang, Banten</li>
+                    <li class="flex items-center"><i class="fa-solid fa-phone mr-3 text-amber-400 shrink-0"></i>+62 812-3456-7890</li>
+                    <li class="flex items-center"><i class="fa-solid fa-envelope mr-3 text-amber-400 shrink-0"></i>info@kemilgemilang.com</li>
+                </ul>
+            </div>
+        </div>
+        <!-- Bottom bar -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-emerald-900/60 pt-6 flex flex-col sm:flex-row justify-between items-center text-xs text-slate-500">
+            <p>© 2026 Kemil Gemilang. All Rights Reserved. Layanan Qurban Terbaik Anda.</p>
+            <div class="flex space-x-4 mt-4 sm:mt-0">
+                <a href="#" class="hover:underline">Kebijakan Privasi</a>
+                <a href="#" class="hover:underline">Syarat Syar'i</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- TOAST NOTIFICATION SYSTEM -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 space-y-2 pointer-events-none"></div>
+
+    <script>
+        // --- DATA DEPOSIT: Catalog of Qurban Animals ---
+        const originalAnimals = [
+            {
+                id: 'S01',
+                name: 'Sapi Limousin KG-01',
+                category: 'sapi',
+                price: 33500000,
+                weight: 650,
+                age: '2.5 Tahun',
+                health: 'Bebas PMK (Sertifikat Sehat)',
+                teeth: 'Kupak 2 (Memenuhi syarat)',
+                breed: 'Limousin Super',
+                status: 'Tersedia',
+                desc: 'Memiliki struktur daging padat berkualitas, dipelihara dengan pakan bernutrisi tinggi harian sehingga bebas cacing hati.',
+                img: 'https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?auto=format&fit=crop&w=600&q=80'
+            },
+            {
+                id: 'S08',
+                name: 'Sapi Limousin Super KG-08',
+                category: 'sapi',
+                price: 34500000,
+                weight: 680,
+                age: '2.5 Tahun',
+                health: 'Bebas PMK (Sertifikat Sehat)',
+                teeth: 'Kupak 2 (Memenuhi syarat)',
+                breed: 'Limousin Premium',
+                status: 'Tersedia',
+                desc: 'Sapi Limousin jawara dengan konformasi tubuh tegap, padat daging, dan sangat terawat dengan sistem nutrisi terstandarisasi.',
+                img: 'https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?auto=format&fit=crop&w=600&q=80'
+            },
+            {
+                id: 'S02',
+                name: 'Sapi Bali KG-02',
+                category: 'sapi',
+                price: 22000000,
+                weight: 420,
+                age: '2 Tahun',
+                health: 'Sehat Sehat (Rekomendasi Dokter)',
+                teeth: 'Kupak 2 (Layak sembelih)',
+                breed: 'Bali Asli',
+                status: 'Tersedia',
+                desc: 'Terkenal dengan persentase karkas daging yang tinggi dan sedikit lemak. Ideal untuk sasaran porsi qurban merata.',
+                img: 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=600&q=80'
+            },
+            {
+                id: 'S03',
+                name: 'Sapi Kupang Premium KG-03',
+                category: 'sapi',
+                price: 24500000,
+                weight: 480,
+                age: '2.2 Tahun',
+                health: 'Bebas PMK (Sertifikat Karantina)',
+                teeth: 'Kupak 2',
+                breed: 'Kupang Super',
+                status: 'Tersedia',
+                desc: 'Adaptif, lincah, bugar dengan serat otot daging yang sangat gurih setelah pengolahan.',
+                img: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=600&q=80'
+            },
+            {
+                id: 'K01',
+                name: 'Kambing Etawa KG-11',
+                category: 'kambing',
+                price: 5200000,
+                weight: 55,
+                age: '1.5 Tahun',
+                health: 'Sangat Sehat (Uji Klinis Dokter)',
+                teeth: 'Gigi Tanggal Sepasang (Cukup Umur)',
+                breed: 'Suri/Etawa',
+                status: 'Tersedia',
+                desc: 'Tubuh tegap dan lincah, telinga panjang khas Etawa. Cocok bagi pequrban perorangan berkelas.',
+                img: 'https://images.unsplash.com/photo-1524413840807-0c3cb6fa808d?auto=format&fit=crop&w=600&q=80'
+            },
+            {
+                id: 'D01',
+                name: 'Domba Garut Tanduk KG-21',
+                category: 'domba',
+                price: 4900000,
+                weight: 50,
+                age: '1.4 Tahun',
+                health: 'Sangat Bugar & Sehat',
+                teeth: 'Poel 2 Gigi (Syarat Terpenuhi)',
+                breed: 'Garut Asli',
+                status: 'Tersedia',
+                desc: 'Memiliki tanduk melingkar gagah, bulu tebal, otot dada lebar, serta kandungan karkas berbobot tinggi.',
+                img: 'https://images.unsplash.com/photo-1484557985045-edf25e08da73?auto=format&fit=crop&w=600&q=80'
+            },
+            {
+                id: 'K02',
+                name: 'Kambing Kacang KG-12',
+                category: 'kambing',
+                price: 3600000,
+                weight: 38,
+                age: '1.2 Tahun',
+                health: 'Sehat Bebas PMK',
+                teeth: 'Cukup Umur Syar\'i',
+                breed: 'Kambing Kacang',
+                status: 'Tersedia',
+                desc: 'Ukuran kompak yang pas, aktif bergerak, nafsu makan tinggi, dan dirawat higienis.',
+                img: 'https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=600&q=80'
+            }
+        ];
+
+        // Deep copy of data to manage state
+        let animals = [...originalAnimals];
+
+        // Global Shopping Cart State
+        let cart = [];
+
+        // Track Simulation DB
+        let trackedOrders = {
+            "KG-98242": {
+                id: "KG-98242",
+                custName: "Bpk. Randy Hidayat",
+                phone: "+62 813-8889-1234",
+                email: "randy@gmail.com",
+                date: "12 Mei 2026",
+                delivDate: "15 Juni 2026",
+                address: "Perumahan BSD Cluster Edelweiss No. 4, Tangerang Selatan",
+                items: [
+                    { name: "Sapi Limousin KG-01", price: 33500000, niat: "Randy Hidayat bin Hidayat" }
+                ],
+                total: 33500000,
+                method: "BCA Virtual Account",
+                status: "Dipelihara di Kandang", 
+                statusStep: 2, 
+                paymentPaid: true
+            }
+        };
+
+        // Tabungan Qurban Simulation DB
+        let activeSavings = [
+            {
+                id: "TAB-8491",
+                animalId: "S02",
+                animalName: "Sapi Bali KG-02",
+                animalImg: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=600&q=80",
+                totalPrice: 22000000,
+                savedAmount: 8800000,
+                durationMonths: 10,
+                monthlyAmount: 2200000,
+                paymentsPaid: 4,
+                custName: "Ahmad Subarjo",
+                phone: "081234567890",
+                paymentsHistory: [
+                    { date: "10 Jan 2026", amount: 2200000, desc: "Setoran Awal (Bulan 1)" },
+                    { date: "10 Feb 2026", amount: 2200000, desc: "Setoran Angsuran Bulan 2" },
+                    { date: "10 Mar 2026", amount: 2200000, desc: "Setoran Angsuran Bulan 3" },
+                    { date: "10 Apr 2026", amount: 2200000, desc: "Setoran Angsuran Bulan 4" }
+                ]
+            }
+        ];
+
+        // On document load
+        window.onload = function() {
+            renderCatalog('all');
+            updateAqiqahCalculator();
+            populateSavingsAnimalSelect();
+            updateSavingsCalculator();
+            renderSavingsDashboard();
+        };
+
+        // Navigation state controllers
+        function showSection(sectionId) {
+            document.getElementById('section-home').classList.add('hidden');
+            document.getElementById('section-aqiqah-custom').classList.add('hidden');
+            document.getElementById('section-tracking').classList.add('hidden');
+            document.getElementById('section-tabungan').classList.add('hidden');
+
+            document.getElementById('section-' + sectionId).classList.remove('hidden');
+            
+            // Sync navigation highlights
+            document.querySelectorAll('#desktop-nav .nav-link').forEach(link => {
+                link.classList.remove('text-emerald-800', 'font-semibold');
+            });
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Smart checker action logic for Header buttons
+        function handleHeaderCheckInvoice() {
+            if (window.lastGeneratedInvoiceId && trackedOrders[window.lastGeneratedInvoiceId]) {
+                const order = trackedOrders[window.lastGeneratedInvoiceId];
+                document.getElementById('inv-id').innerText = order.id;
+                document.getElementById('inv-date').innerText = order.date;
+                document.getElementById('inv-cust-name').innerText = order.custName;
+                document.getElementById('inv-cust-phone').innerText = order.phone;
+                document.getElementById('inv-cust-email').innerText = order.email;
+                document.getElementById('inv-cust-address').innerText = order.address;
+                document.getElementById('inv-delivery-date').innerText = order.delivDate;
+                document.getElementById('inv-pay-method').innerText = order.method;
+                document.getElementById('inv-total').innerText = formatRupiah(order.total);
+
+                const invProdContainer = document.getElementById('inv-products-list');
+                invProdContainer.innerHTML = '';
+                
+                let allNiat = [];
+                order.items.forEach(item => {
+                    const row = document.createElement('div');
+                    row.className = "flex justify-between text-sm py-1 border-b pb-1 border-slate-100 last:border-0";
+                    row.innerHTML = `
+                        <span class="text-slate-600 font-medium">${item.name} <br><span class="text-[11px] text-slate-400">Niat: ${item.niat}</span></span>
+                        <span class="font-bold text-slate-900">${formatRupiah(item.price)}</span>
+                    `;
+                    invProdContainer.appendChild(row);
+                    if (item.niat) allNiat.push(item.niat);
+                });
+
+                const niatTextEl = document.getElementById('inv-niat-text');
+                if (allNiat.length > 0) {
+                    document.getElementById('inv-niat-section').classList.remove('hidden');
+                    niatTextEl.innerText = `Niat Ibadah ditujukan atas nama: ${allNiat.join(', ')}. Semoga berkah dan diterima di sisi Allah SWT. Amin.`;
+                } else {
+                    document.getElementById('inv-niat-section').classList.add('hidden');
+                }
+
+                const simBtn = document.getElementById('simpay-btn');
+                if (order.paymentPaid) {
+                    simBtn.disabled = true;
+                    simBtn.className = "px-5 py-2.5 bg-slate-300 text-slate-500 rounded-xl font-bold text-xs cursor-not-allowed";
+                    simBtn.innerText = "Sudah Lunas";
+                } else {
+                    simBtn.disabled = false;
+                    simBtn.className = "px-5 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl font-bold text-xs transition-colors shadow-sm";
+                    simBtn.innerText = "Bayar Sekarang (Simulasi)";
+                }
+
+                document.getElementById('invoice-modal').classList.remove('hidden');
+            } else {
+                showSection('tracking');
+                showToast("Cari Invoice", "Silakan ketik nomor Invoice atau gunakan ID Contoh di bawah ini.");
+                const inputEl = document.getElementById('track-id-input');
+                if (inputEl) {
+                    inputEl.focus();
+                }
+            }
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+            } else {
+                menu.classList.add('hidden');
+            }
+        }
+
+        // --- CATALOG RENDERING & SEARCH ---
+        function renderCatalog(categoryFilter = 'all', searchTerm = '') {
+            const grid = document.getElementById('product-grid');
+            grid.innerHTML = '';
+
+            const filtered = animals.filter(item => {
+                const matchesCategory = categoryFilter === 'all' || item.category === categoryFilter;
+                const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                                      item.breed.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                                      item.id.toLowerCase().includes(searchTerm.toLowerCase());
+                return matchesCategory && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-12">
+                        <i class="fa-solid fa-face-frown text-4xl text-slate-300 mb-3"></i>
+                        <p class="text-slate-500 font-medium">Hewan yang Anda cari tidak ditemukan.</p>
+                        <button onclick="clearSearch()" class="text-emerald-800 font-bold text-sm mt-1 hover:underline">Hapus Pencarian</button>
+                    </div>
+                `;
+                return;
+            }
+
+            filtered.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-3xl overflow-hidden border border-slate-200/80 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between";
+                card.innerHTML = `
+                    <div>
+                        <!-- Image & Badges -->
+                        <div class="relative h-52 bg-slate-100">
+                            <img src="${item.img}" alt="${item.name}" 
+                                 onerror="this.src='https://placehold.co/600x400/064e3b/fbbf24?text=${item.name.replace(/ /g, '+')}'"
+                                 class="w-full h-full object-cover">
+                            <span class="absolute top-3 left-3 bg-emerald-800/90 text-white font-bold text-[10px] px-2.5 py-1 rounded-full uppercase tracking-wider backdrop-blur-sm flex items-center gap-1">
+                                <i class="fa-solid fa-shield-halved text-amber-400"></i> ${item.health}
+                            </span>
+                            <span class="absolute bottom-3 right-3 bg-slate-900/80 text-white font-bold text-xs px-2.5 py-1 rounded-full backdrop-blur-sm">
+                                Kode: ${item.id}
+                            </span>
+                        </div>
+
+                        <!-- Info details -->
+                        <div class="p-5 space-y-3">
+                            <div class="flex items-start justify-between">
+                                <div>
+                                    <h4 class="font-bold text-slate-900 text-lg leading-tight group-hover:text-emerald-800">${item.name}</h4>
+                                    <p class="text-xs text-slate-400 mt-1">Jenis: ${item.breed}</p>
+                                </div>
+                                <span class="bg-emerald-100 text-emerald-800 font-semibold text-xs px-2 py-0.5 rounded-lg shrink-0">${item.status}</span>
+                            </div>
+
+                            <!-- Meta Grid -->
+                            <div class="grid grid-cols-2 gap-2 text-xs text-slate-500 bg-slate-50 p-3 rounded-2xl">
+                                <div class="flex items-center"><i class="fa-solid fa-weight-hanging text-emerald-700 mr-2 w-4"></i>${item.weight} kg</div>
+                                <div class="flex items-center"><i class="fa-solid fa-cake-candles text-emerald-700 mr-2 w-4"></i>${item.age}</div>
+                                <div class="flex items-center col-span-2"><i class="fa-solid fa-teeth text-emerald-700 mr-2 w-4"></i>Gigi: ${item.teeth}</div>
+                            </div>
+
+                            <p class="text-xs text-slate-500 line-clamp-2">${item.desc}</p>
+                        </div>
+                    </div>
+
+                    <!-- Price and action -->
+                    <div class="p-5 pt-0 border-t border-slate-100 flex items-center justify-between mt-auto bg-slate-50/50">
+                        <div>
+                            <span class="text-[10px] text-slate-400 block uppercase font-bold tracking-wider">Harga Akad</span>
+                            <span class="text-lg font-black text-emerald-950">${formatRupiah(item.price)}</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="openDetailModal('${item.id}')" class="p-2 rounded-xl border border-slate-200 hover:bg-slate-100 text-slate-600 transition-colors" title="Lihat Detail">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                            <button onclick="addToCart('${item.id}')" class="px-4 py-2.5 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-sm transition-colors">
+                                Pilih
+                            </button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function filterCatalog(category) {
+            // Update active state class
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.className = "filter-btn px-5 py-2.5 rounded-xl font-semibold text-sm transition-all bg-slate-100 text-slate-600 hover:bg-slate-200";
+            });
+            const activeBtn = document.getElementById('filter-' + category);
+            if (activeBtn) {
+                activeBtn.className = "filter-btn px-5 py-2.5 rounded-xl font-semibold text-sm transition-all bg-emerald-800 text-white shadow-sm";
+            }
+
+            renderCatalog(category, document.getElementById('search-input').value);
+        }
+
+        function searchCatalog() {
+            const val = document.getElementById('search-input').value;
+            let activeCategory = 'all';
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                if (btn.classList.contains('bg-emerald-800')) {
+                    activeCategory = btn.id.replace('filter-', '');
+                }
+            });
+            renderCatalog(activeCategory, val);
+        }
+
+        function clearSearch() {
+            document.getElementById('search-input').value = '';
+            filterCatalog('all');
+        }
+
+        // --- STREAMING_CHUNK: Managing modal actions and detailed specifications... ---
+        // --- DETAIL MODAL CONTROLLER ---
+        function openDetailModal(id) {
+            const animal = animals.find(a => a.id === id);
+            if (!animal) return;
+
+            const modal = document.getElementById('detail-modal');
+            const card = document.getElementById('detail-modal-card');
+            const content = document.getElementById('detail-modal-content');
+
+            content.innerHTML = `
+                <!-- Image Header -->
+                <div class="relative h-72">
+                    <img src="${animal.img}" alt="${animal.name}" 
+                         onerror="this.src='https://placehold.co/600x400/064e3b/fbbf24?text=${animal.name.replace(/ /g, '+')}'"
+                         class="w-full h-full object-cover">
+                    <button onclick="closeDetailModal()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-slate-900/60 backdrop-blur-sm text-white flex items-center justify-center hover:bg-slate-900 transition-colors">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                    <div class="absolute bottom-4 left-4 bg-emerald-850/90 text-white font-bold text-xs px-3 py-1.5 rounded-xl backdrop-blur-sm">
+                        ID Hewan: ${animal.id}
+                    </div>
+                </div>
+
+                <!-- Body Info -->
+                <div class="p-6 sm:p-8 space-y-6">
+                    <div class="flex justify-between items-start gap-4">
+                        <div>
+                            <span class="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">${animal.category}</span>
+                            <h4 class="text-2xl font-black text-slate-950 mt-1.5">${animal.name}</h4>
+                            <p class="text-sm text-slate-500 font-medium">Jenis Breed: ${animal.breed}</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-[11px] text-slate-400 uppercase font-black tracking-wider">Harga Sesuai Akad</p>
+                            <p class="text-2xl font-black text-emerald-800">${formatRupiah(animal.price)}</p>
+                        </div>
+                    </div>
+
+                    <!-- Health & Specification Grid -->
+                    <div class="grid grid-cols-2 gap-4 bg-slate-50 p-4 rounded-2xl border">
+                        <div>
+                            <p class="text-xs text-slate-400">Berat Badan Riil</p>
+                            <p class="font-bold text-slate-900 flex items-center"><i class="fa-solid fa-weight-hanging text-emerald-700 mr-2"></i>${animal.weight} Kg</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-400">Umur Hewan</p>
+                            <p class="font-bold text-slate-900 flex items-center"><i class="fa-solid fa-cake-candles text-emerald-700 mr-2"></i>${animal.age}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-400">Kondisi Gigi (Kupak/Poel)</p>
+                            <p class="font-bold text-slate-900 flex items-center"><i class="fa-solid fa-teeth-open text-emerald-700 mr-2"></i>${animal.teeth}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-400">Status Kesehatan</p>
+                            <p class="font-bold text-emerald-800 flex items-center"><i class="fa-solid fa-circle-check text-emerald-700 mr-2"></i>Sangat Layak Syar'i</p>
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="space-y-2">
+                        <h5 class="font-bold text-slate-900">Deskripsi & Perawatan Hewan</h5>
+                        <p class="text-sm text-slate-600 leading-relaxed">${animal.desc}</p>
+                    </div>
+
+                    <!-- Medical Certificate Assurance Card -->
+                    <div class="bg-emerald-50 border border-emerald-100 p-4 rounded-2xl flex items-start space-x-3.5">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-prescription-bottle-medical text-xl"></i>
+                        </div>
+                        <div>
+                            <h6 class="font-bold text-emerald-950 text-sm">Garansi Sehat Bersertifikat Resmi</h6>
+                            <p class="text-xs text-emerald-800 mt-0.5">Hewan ini telah lolos pemeriksaan kesehatan berkala oleh Dinas Pertanian & Ketahanan Pangan dengan status non-PMK / non-LSD. Kami menyertakan buku sertifikat medis fisik asli saat pengiriman.</p>
+                        </div>
+                    </div>
+
+                    <!-- Action panel -->
+                    <div class="flex gap-2 pt-4 border-t">
+                        <button onclick="closeDetailModal()" class="w-1/3 py-3 border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-xl font-bold text-sm transition-colors text-center">
+                            Tutup Detail
+                        </button>
+                        <button onclick="closeDetailModal(); addToCart('${animal.id}')" class="w-2/3 py-3 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl font-black text-sm transition-colors text-center shadow-md">
+                            Masukkan ke Keranjang
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            modal.classList.remove('hidden');
+            setTimeout(() => card.classList.remove('scale-95'), 50);
+        }
+
+        function closeDetailModal() {
+            const modal = document.getElementById('detail-modal');
+            const card = document.getElementById('detail-modal-card');
+            card.classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 200);
+        }
+
+        // --- AQIQAH CALCULATOR WIZARD ---
+        function updateAqiqahCalculator() {
+            const gender = document.querySelector('input[name="aqiqah-gender"]:checked').value;
+            const animal = document.querySelector('input[name="aqiqah-animal"]:checked').value;
+            const process = document.querySelector('input[name="aqiqah-process"]:checked').value;
+            
+            // Adjust layouts & active styles with guard checks
+            document.querySelectorAll('input[name="aqiqah-gender"]').forEach(el => {
+                const label = document.getElementById(`gender-${el.value}-label`);
+                if (label) {
+                    if (el.checked) {
+                        label.className = "border-2 rounded-2xl p-4 flex flex-col items-center justify-center cursor-pointer transition-all border-emerald-800 bg-emerald-50/25";
+                    } else {
+                        label.className = "border-2 rounded-2xl p-4 flex flex-col items-center justify-center cursor-pointer transition-all border-slate-200 hover:border-slate-300";
+                    }
+                }
+            });
+
+            document.querySelectorAll('input[name="aqiqah-animal"]').forEach(el => {
+                const label = document.getElementById(`aqiqah-type-${el.value}-label`);
+                if (label) {
+                    if (el.checked) {
+                        label.className = "border-2 rounded-2xl p-4 flex flex-col items-center justify-center cursor-pointer transition-all border-emerald-800 bg-emerald-50/25";
+                    } else {
+                        label.className = "border-2 rounded-2xl p-4 flex flex-col items-center justify-center cursor-pointer transition-all border-slate-200 hover:border-slate-300";
+                    }
+                }
+            });
+
+            document.querySelectorAll('input[name="aqiqah-process"]').forEach(el => {
+                const label = document.getElementById(`process-${el.value}-label`);
+                if (label) {
+                    if (el.checked) {
+                        label.className = "flex items-center p-4 border rounded-2xl cursor-pointer bg-emerald-50/20 border-emerald-800";
+                    } else {
+                        label.className = "flex items-center p-4 border rounded-2xl cursor-pointer hover:bg-slate-50 border-slate-200";
+                    }
+                }
+            });
+
+            const boxWrapper = document.getElementById('box-quantity-wrapper');
+            if (process === 'box') {
+                boxWrapper.classList.remove('hidden');
+            } else {
+                boxWrapper.classList.add('hidden');
+            }
+
+            // Calculation formula variables
+            const count = (gender === 'male') ? 2 : 1;
+            const animalPrice = (animal === 'kambing') ? 2800000 : 2500000;
+            const processPriceMultiplier = (process === 'raw') ? 0 : (process === 'cooked' ? 400000 : 0);
+            
+            let finalPrice = count * (animalPrice + processPriceMultiplier);
+            
+            let summaryHTML = `
+                <div class="flex justify-between">
+                    <span class="text-slate-300">${count}x Hewan (${animal === 'kambing' ? 'Kambing Etawa' : 'Domba Garut'})</span>
+                    <span class="font-bold">${formatRupiah(count * animalPrice)}</span>
+                </div>
+            `;
+
+            if (process === 'cooked') {
+                summaryHTML += `
+                    <div class="flex justify-between">
+                        <span class="text-slate-300">Biaya Olah Matang (Sate, Gulai)</span>
+                        <span class="font-bold">${formatRupiah(count * 400000)}</span>
+                    </div>
+                `;
+            } else if (process === 'box') {
+                const boxCount = parseInt(document.getElementById('aqiqah-box-count').value) || 50;
+                const totalBoxPrice = boxCount * 18000;
+                finalPrice += totalBoxPrice;
+                summaryHTML += `
+                    <div class="flex justify-between">
+                        <span class="text-slate-300">Biaya Pengolahan Matang</span>
+                        <span class="font-bold text-emerald-400">Termasuk</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-300">${boxCount}x Nasi Box Premium (@Rp18rb)</span>
+                        <span class="font-bold">${formatRupiah(totalBoxPrice)}</span>
+                    </div>
+                `;
+            } else {
+                summaryHTML += `
+                    <div class="flex justify-between">
+                        <span class="text-slate-300">Pengiriman Karkas Mentah</span>
+                        <span class="font-bold text-emerald-400">Gratis</span>
+                    </div>
+                `;
+            }
+
+            document.getElementById('aqiqah-summary-details').innerHTML = summaryHTML;
+            document.getElementById('aqiqah-calc-total').innerText = formatRupiah(finalPrice);
+        }
+
+        function addAqiqahToCart() {
+            const gender = document.querySelector('input[name="aqiqah-gender"]:checked').value;
+            const animal = document.querySelector('input[name="aqiqah-animal"]:checked').value;
+            const process = document.querySelector('input[name="aqiqah-process"]:checked').value;
+            const babyName = document.getElementById('aqiqah-baby-name').value.trim() || 'Hamba Allah';
+            const parentsName = document.getElementById('aqiqah-parents-name').value.trim() || 'Hamba Allah';
+
+            const count = (gender === 'male') ? 2 : 1;
+            const animalPrice = (animal === 'kambing') ? 2800000 : 2500000;
+            const processPriceMultiplier = (process === 'raw') ? 0 : (process === 'cooked' ? 400000 : 0);
+            
+            let finalPrice = count * (animalPrice + processPriceMultiplier);
+            let description = `Paket Aqiqah Anak ${gender === 'male' ? 'Laki-Laki' : 'Perempuan'} (${count} ${animal === 'kambing' ? 'Kambing' : 'Domba'}). `;
+            
+            if (process === 'raw') {
+                description += "Pengiriman Karkas Mentah.";
+            } else if (process === 'cooked') {
+                description += "Diolah Matang (Sate + Gulai).";
+            } else if (process === 'box') {
+                const boxCount = parseInt(document.getElementById('aqiqah-box-count').value) || 50;
+                finalPrice += boxCount * 18000;
+                description += `Diolah Nasi Box Premium sebanyak ${boxCount} Box.`;
+            }
+
+            const aqiqahItem = {
+                id: 'AQ-' + Date.now().toString().slice(-4),
+                name: `Paket Aqiqah Premium (${babyName})`,
+                category: 'aqiqah',
+                price: finalPrice,
+                quantity: 1,
+                desc: description,
+                babyName: babyName,
+                parentsName: parentsName,
+                niat: `Aqiqah atas nama ${babyName} binti/bin ${parentsName}`
+            };
+
+            cart.push(aqiqahItem);
+            updateCartUI();
+            showToast("Sukses!", "Paket Aqiqah berhasil dimasukkan ke keranjang belanja.");
+            toggleCart();
+        }
+
+        // --- STREAMING_CHUNK: Managing shopping cart events and responsive state updates... ---
+        // --- SHOPPING CART MANAGEMENT ---
+        function addToCart(id) {
+            const animal = animals.find(a => a.id === id);
+            if (!animal) return;
+
+            // Check if already in cart
+            const exists = cart.find(item => item.id === id);
+            if (exists) {
+                showToast("Informasi", "Hewan ini sudah ada di dalam keranjang belanja.");
+                toggleCart();
+                return;
+            }
+
+            const cartItem = {
+                ...animal,
+                quantity: 1,
+                niat: '' 
+            };
+
+            cart.push(cartItem);
+            updateCartUI();
+            showToast("Sukses!", `${animal.name} dimasukkan ke keranjang.`);
+            toggleCart();
+        }
+
+        function removeFromCart(id) {
+            cart = cart.filter(item => item.id !== id);
+            updateCartUI();
+            showToast("Dihapus", "Item dikeluarkan dari keranjang.");
+        }
+
+        function updateNiat(id, val) {
+            const item = cart.find(i => i.id === id);
+            if (item) {
+                item.niat = val;
+            }
+        }
+
+        function updateCartUI() {
+            const list = document.getElementById('cart-items-list');
+            const badge = document.getElementById('cart-badge');
+            const checkoutBtn = document.getElementById('checkout-btn');
+
+            list.innerHTML = '';
+            
+            if (cart.length === 0) {
+                document.getElementById('cart-empty-state').classList.remove('hidden');
+                badge.classList.add('hidden');
+                checkoutBtn.disabled = true;
+                checkoutBtn.className = "w-full py-4 rounded-xl bg-slate-200 text-slate-400 font-bold text-center cursor-not-allowed";
+                
+                document.getElementById('cart-subtotal').innerText = 'Rp 0';
+                document.getElementById('cart-total').innerText = 'Rp 0';
+                return;
+            }
+
+            document.getElementById('cart-empty-state').classList.add('hidden');
+            badge.classList.remove('hidden');
+            badge.innerText = cart.length;
+            checkoutBtn.disabled = false;
+            checkoutBtn.className = "w-full py-4 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-center shadow-lg shadow-amber-500/10 transition-colors";
+
+            let subtotal = 0;
+
+            cart.forEach(item => {
+                subtotal += item.price;
+                const itemEl = document.createElement('div');
+                itemEl.className = "border-b pb-4 space-y-3";
+                
+                const isQurban = item.category !== 'aqiqah';
+                const niatLabel = isQurban ? 'Atas nama pequrban (Mudhohi):' : 'Atas nama anak:';
+                const placeholder = isQurban ? 'Contoh: Ahmad bin Junaidi' : 'Contoh: Muhammad Ghazi';
+
+                itemEl.innerHTML = `
+                    <div class="flex gap-4">
+                        <div class="w-20 h-20 rounded-xl bg-slate-100 overflow-hidden shrink-0">
+                            <img src="${item.img || 'https://placehold.co/100x100'}" alt="${item.name}" 
+                                 onerror="this.src='https://placehold.co/200x200/064e3b/fbbf24?text=Hewan'"
+                                 class="w-full h-full object-cover">
+                        </div>
+                        <div class="flex-grow space-y-1">
+                            <div class="flex justify-between items-start">
+                                <h5 class="font-bold text-slate-900 text-sm leading-tight">${item.name}</h5>
+                                <button onclick="removeFromCart('${item.id}')" class="text-slate-400 hover:text-red-600 text-sm">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </div>
+                            <p class="text-xs text-slate-500">${item.desc || (item.weight ? `${item.weight} Kg | ${item.age}` : '')}</p>
+                            <p class="font-black text-emerald-950 text-sm mt-1">${formatRupiah(item.price)}</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Shariah Niat Inputs -->
+                    <div class="bg-emerald-50/50 p-3 rounded-xl border border-emerald-150 space-y-1.5">
+                        <label class="block text-[10px] font-bold text-emerald-950 uppercase tracking-wider">${niatLabel}</label>
+                        <input type="text" value="${item.niat}" oninput="updateNiat('${item.id}', this.value)" placeholder="${placeholder}" class="w-full px-3 py-1.5 border border-slate-200 rounded-lg text-xs focus:outline-emerald-800">
+                    </div>
+                `;
+                list.appendChild(itemEl);
+            });
+
+            document.getElementById('cart-subtotal').innerText = formatRupiah(subtotal);
+            document.getElementById('cart-total').innerText = formatRupiah(subtotal);
+        }
+
+        function toggleCart() {
+            const drawer = document.getElementById('cart-drawer');
+            drawer.classList.toggle('hidden');
+        }
+
+        // --- CHECKOUT WIZARD PROCESS ---
+        function openCheckoutModal() {
+            toggleCart(); 
+            
+            const summaryContainer = document.getElementById('checkout-summary-list');
+            summaryContainer.innerHTML = '';
+            
+            let total = 0;
+            cart.forEach(item => {
+                total += item.price;
+                const div = document.createElement('div');
+                div.className = "flex justify-between items-start py-2 border-b border-dashed";
+                div.innerHTML = `
+                    <div class="max-w-[80%]">
+                        <p class="font-bold text-slate-950 text-xs">${item.name}</p>
+                        <p class="text-[10px] text-slate-400 italic">Niat: ${item.niat || 'Hamba Allah'}</p>
+                    </div>
+                    <span class="font-bold text-xs text-slate-900">${formatRupiah(item.price)}</span>
+                `;
+                summaryContainer.appendChild(div);
+            });
+
+            document.getElementById('checkout-subtotal').innerText = formatRupiah(total);
+            document.getElementById('checkout-total').innerText = formatRupiah(total);
+
+            // Default dates
+            const deliveryInput = document.getElementById('delivery-date');
+            const today = new Date();
+            today.setDate(today.getDate() + 14); 
+            deliveryInput.value = today.toISOString().split('T')[0];
+
+            document.getElementById('checkout-modal').classList.remove('hidden');
+            goToStep1();
+        }
+
+        function closeCheckoutModal() {
+            document.getElementById('checkout-modal').classList.add('hidden');
+        }
+
+        function goToStep1() {
+            document.getElementById('checkout-step-1').classList.remove('hidden');
+            document.getElementById('checkout-step-2').classList.add('hidden');
+            
+            document.getElementById('step-1-badge').className = "w-6 h-6 rounded-full bg-emerald-800 text-white font-bold text-xs flex items-center justify-center";
+            document.getElementById('step-2-badge').className = "w-6 h-6 rounded-full bg-slate-200 text-slate-600 font-bold text-xs flex items-center justify-center";
+        }
+
+        function goToStep2() {
+            // Validation step 1
+            const name = document.getElementById('cust-name').value.trim();
+            const phone = document.getElementById('cust-phone').value.trim();
+            const email = document.getElementById('cust-email').value.trim();
+            const address = document.getElementById('cust-address').value.trim();
+
+            if (!name || !phone || !email || !address) {
+                showToast("Peringatan", "Mohon lengkapi seluruh data informasi pengiriman Anda.");
+                return;
+            }
+
+            document.getElementById('checkout-step-1').classList.add('hidden');
+            document.getElementById('checkout-step-2').classList.remove('hidden');
+
+            document.getElementById('step-1-badge').className = "w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 font-bold text-xs flex items-center justify-center";
+            document.getElementById('step-2-badge').className = "w-6 h-6 rounded-full bg-emerald-800 text-white font-bold text-xs flex items-center justify-center";
+        }
+
+        function selectPaymentMethod(methodCode) {
+            ['qris', 'bca', 'mandiri'].forEach(m => {
+                const el = document.getElementById('pay-' + m);
+                el.className = "flex items-center justify-between p-4 border border-slate-200 rounded-xl cursor-pointer";
+            });
+
+            const code = methodCode.toLowerCase();
+            const activeEl = document.getElementById('pay-' + (code.includes('qris') ? 'qris' : (code.includes('bca') ? 'bca' : 'mandiri')));
+            if (activeEl) {
+                activeEl.className = "flex items-center justify-between p-4 border-2 border-emerald-800 bg-emerald-50/20 rounded-xl cursor-pointer";
+            }
+        }
+
+        // --- CONVERT AND PROCESS ORDER ---
+        function processOrder() {
+            const name = document.getElementById('cust-name').value;
+            const phone = document.getElementById('cust-phone').value;
+            const email = document.getElementById('cust-email').value;
+            const address = document.getElementById('cust-address').value;
+            const delivDate = document.getElementById('delivery-date').value;
+            const delivOpt = document.getElementById('delivery-option').value;
+            const payment = document.querySelector('input[name="pay-method"]:checked').value;
+
+            // Generate unique invoice number
+            const invId = "KG-" + Math.floor(10000 + Math.random() * 90000);
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+
+            // Save order into simulation DB
+            const newOrder = {
+                id: invId,
+                custName: name,
+                phone: phone,
+                email: email,
+                date: formatDate(new Date()),
+                delivDate: formatDate(new Date(delivDate)),
+                address: address,
+                items: cart.map(item => ({ name: item.name, price: item.price, niat: item.niat || 'Hamba Allah' })),
+                total: total,
+                method: payment,
+                status: "Menunggu Pembayaran",
+                statusStep: 1,
+                paymentPaid: false
+            };
+
+            trackedOrders[invId] = newOrder;
+            
+            // Set global pointer for check invoice action
+            window.lastGeneratedInvoiceId = invId;
+
+            // Clear Cart
+            cart = [];
+            updateCartUI();
+
+            // Populate Invoice Modal UI elements
+            document.getElementById('inv-id').innerText = invId;
+            document.getElementById('inv-date').innerText = newOrder.date;
+            document.getElementById('inv-cust-name').innerText = name;
+            document.getElementById('inv-cust-phone').innerText = phone;
+            document.getElementById('inv-cust-email').innerText = email;
+            document.getElementById('inv-cust-address').innerText = address;
+            document.getElementById('inv-delivery-date').innerText = newOrder.delivDate;
+            document.getElementById('inv-pay-method').innerText = payment;
+            document.getElementById('inv-total').innerText = formatRupiah(total);
+
+            // Resets simulation pay button
+            const simBtn = document.getElementById('simpay-btn');
+            simBtn.disabled = false;
+            simBtn.className = "px-5 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl font-bold text-xs transition-colors shadow-sm";
+            simBtn.innerText = "Bayar Sekarang (Simulasi)";
+
+            // Populate products table inside receipt
+            const invProdContainer = document.getElementById('inv-products-list');
+            invProdContainer.innerHTML = '';
+            
+            let allNiat = [];
+            newOrder.items.forEach(item => {
+                const row = document.createElement('div');
+                row.className = "flex justify-between text-sm py-1 border-b pb-1 border-slate-100 last:border-0";
+                row.innerHTML = `
+                    <span class="text-slate-600 font-medium">${item.name} <br><span class="text-[11px] text-slate-400">Niat: ${item.niat}</span></span>
+                    <span class="font-bold text-slate-900">${formatRupiah(item.price)}</span>
+                `;
+                invProdContainer.appendChild(row);
+                if (item.niat) allNiat.push(item.niat);
+            });
+
+            // Shariah Niat section
+            const niatTextEl = document.getElementById('inv-niat-text');
+            if (allNiat.length > 0) {
+                document.getElementById('inv-niat-section').classList.remove('hidden');
+                niatTextEl.innerText = `Niat Ibadah ditujukan atas nama: ${allNiat.join(', ')}. Semoga berkah dan diterima di sisi Allah SWT. Amin.`;
+            } else {
+                document.getElementById('inv-niat-section').classList.add('hidden');
+            }
+
+            closeCheckoutModal();
+            document.getElementById('invoice-modal').classList.remove('hidden');
+        }
+
+        function closeInvoiceModal() {
+            document.getElementById('invoice-modal').classList.add('hidden');
+            showSection('home');
+        }
+
+        // --- STREAMING_CHUNK: Processing savings calculator logic and ledger history... ---
+        // --- SIMULATED PAYMENT GATEWAY ACTION ---
+        function simulatePayment() {
+            const invId = document.getElementById('inv-id').innerText;
+            const order = trackedOrders[invId];
+            if (order) {
+                order.paymentPaid = true;
+                order.status = "Dipelihara di Kandang";
+                order.statusStep = 2;
+                
+                showToast("Pembayaran Lunas", "Terima kasih! Pembayaran Anda sukses diverifikasi secara instan.");
+                
+                const simBtn = document.getElementById('simpay-btn');
+                simBtn.disabled = true;
+                simBtn.className = "px-5 py-2.5 bg-slate-300 text-slate-500 rounded-xl font-bold text-xs cursor-not-allowed";
+                simBtn.innerText = "Sudah Lunas";
+
+                // Autofills and triggers tracker for user review
+                document.getElementById('track-id-input').value = invId;
+                handleTrackOrder();
+            }
+        }
+
+        // --- TRACK ORDER SYSTEM ---
+        function handleTrackOrder() {
+            const invIdInput = document.getElementById('track-id-input').value.trim().toUpperCase();
+            const resultContainer = document.getElementById('track-result-container');
+            
+            if (!invIdInput) {
+                showToast("Informasi", "Silakan ketik nomor Invoice terlebih dahulu.");
+                return;
+            }
+
+            const order = trackedOrders[invIdInput];
+            if (!order) {
+                resultContainer.classList.remove('hidden');
+                resultContainer.innerHTML = `
+                    <div class="text-center py-6 text-red-500 animate-fadeIn">
+                        <i class="fa-solid fa-triangle-exclamation text-3xl mb-2"></i>
+                        <p class="font-bold">Invoice "${invIdInput}" Tidak Ditemukan</p>
+                        <p class="text-xs text-slate-500 mt-1">Pastikan kode yang Anda masukkan tepat atau gunakan simulasi ID di bawah.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            resultContainer.classList.remove('hidden');
+            
+            let timelineHTML = `
+                <div class="space-y-6 animate-fadeIn">
+                    <!-- Top header summary -->
+                    <div class="flex justify-between items-center border-b pb-4">
+                        <div>
+                            <span class="text-xs text-slate-400">STATUS PESANAN</span>
+                            <h4 class="text-lg font-black text-emerald-900">${order.status}</h4>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-xs text-slate-400">Total Tagihan</span>
+                            <p class="font-bold text-slate-900">${formatRupiah(order.total)}</p>
+                        </div>
+                    </div>
+
+                    <!-- Steps Timeline -->
+                    <div class="relative pl-6 border-l-2 border-slate-200 space-y-8 my-6">
+                        <!-- Step 1 -->
+                        <div class="relative">
+                            <span class="absolute -left-[31px] top-0 w-4 h-4 rounded-full ${order.statusStep >= 1 ? 'bg-emerald-800 ring-4 ring-emerald-100' : 'bg-slate-300'}"></span>
+                            <div>
+                                <h5 class="font-bold text-xs text-slate-900">Verifikasi Pembayaran</h5>
+                                <p class="text-xs text-slate-500 mt-0.5">${order.paymentPaid ? 'Pembayaran Lunas Terverifikasi' : 'Menunggu Transfer Dana'}</p>
+                            </div>
+                        </div>
+                        <!-- Step 2 -->
+                        <div class="relative">
+                            <span class="absolute -left-[31px] top-0 w-4 h-4 rounded-full ${order.statusStep >= 2 ? 'bg-emerald-800 ring-4 ring-emerald-100' : 'bg-slate-300'}"></span>
+                            <div>
+                                <h5 class="font-bold text-xs text-slate-900">Pemeliharaan & Pakan Sehat</h5>
+                                <p class="text-xs text-slate-500 mt-0.5">${order.statusStep >= 2 ? 'Hewan sedang dirawat di kandang transit Kemil Gemilang dengan asupan gizi prima.' : 'Menunggu pelunasan pembayaran'}</p>
+                            </div>
+                        </div>
+                        <!-- Step 3 -->
+                        <div class="relative">
+                            <span class="absolute -left-[31px] top-0 w-4 h-4 rounded-full ${order.statusStep >= 3 ? 'bg-emerald-800 ring-4 ring-emerald-100' : 'bg-slate-300'}"></span>
+                            <div>
+                                <h5 class="font-bold text-xs text-slate-900">Persiapan & Pengantaran</h5>
+                                <p class="text-xs text-slate-500 mt-0.5">Hewan akan diantarkan H-1 menjelang waktu penyembelihan.</p>
+                            </div>
+                        </div>
+                        <!-- Step 4 -->
+                        <div class="relative">
+                            <span class="absolute -left-[31px] top-0 w-4 h-4 rounded-full ${order.statusStep >= 4 ? 'bg-emerald-800 ring-4 ring-emerald-100' : 'bg-slate-300'}"></span>
+                            <div>
+                                <h5 class="font-bold text-xs text-slate-900">Selesai Akad</h5>
+                                <p class="text-xs text-slate-500 mt-0.5">Hewan diserahkan dalam keadaan sehat atau disalurkan sesuai pesanan.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Order Details Panel -->
+                    <div class="bg-slate-50 p-4 rounded-2xl border text-sm space-y-3">
+                        <div class="grid grid-cols-2">
+                            <span class="text-slate-500">Penerima:</span>
+                            <span class="font-bold text-right">${order.custName}</span>
+                        </div>
+                        <div class="grid grid-cols-2">
+                            <span class="text-slate-500">Kontak:</span>
+                            <span class="font-bold text-right">${order.phone}</span>
+                        </div>
+                        <div class="grid grid-cols-2">
+                            <span class="text-slate-500">Tanggal Kirim:</span>
+                            <span class="font-bold text-right text-emerald-800">${order.delivDate}</span>
+                        </div>
+                        <div class="pt-2 border-t">
+                            <p class="text-slate-500 mb-1">Hewan yang dipesan:</p>
+                            <ul class="list-disc pl-5 font-semibold text-slate-800">
+                                ${order.items.map(it => `<li>${it.name} (Niat: ${it.niat})</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            resultContainer.innerHTML = timelineHTML;
+        }
+
+        function fillSampleTrackID() {
+            document.getElementById('track-id-input').value = "KG-98242";
+            handleTrackOrder();
+        }
+
+        // --- TABUNGAN QURBAN FUNCTIONS ---
+        function populateSavingsAnimalSelect() {
+            const select = document.getElementById('savings-animal-select');
+            if (!select) return;
+            select.innerHTML = '';
+            animals.forEach(animal => {
+                const opt = document.createElement('option');
+                opt.value = animal.id;
+                opt.innerText = `${animal.name} - ${formatRupiah(animal.price)} (${animal.weight} Kg)`;
+                select.appendChild(opt);
+            });
+        }
+
+        function updateSavingsCalculator() {
+            const animalId = document.getElementById('savings-animal-select').value;
+            const animal = animals.find(a => a.id === animalId);
+            if (!animal) return;
+
+            const duration = parseInt(document.getElementById('savings-duration-select').value) || 10;
+            const price = animal.price;
+            
+            const monthly = Math.round(price / duration);
+            const weekly = Math.round(price / (duration * 4));
+
+            document.getElementById('savings-target-price').innerText = formatRupiah(price);
+            document.getElementById('savings-monthly-estimate').innerText = formatRupiah(monthly);
+            document.getElementById('savings-weekly-estimate').innerText = formatRupiah(weekly);
+            
+            // Auto prepopulate initial deposit to equal 1 month's installment
+            document.getElementById('savings-initial-deposit').value = monthly;
+        }
+
+        function startNewSavingsPlan() {
+            const animalId = document.getElementById('savings-animal-select').value;
+            const animal = animals.find(a => a.id === animalId);
+            if (!animal) return;
+
+            const name = document.getElementById('savings-cust-name').value.trim();
+            const phone = document.getElementById('savings-cust-phone').value.trim();
+            const duration = parseInt(document.getElementById('savings-duration-select').value) || 10;
+            const initialDepositVal = parseInt(document.getElementById('savings-initial-deposit').value) || 0;
+
+            if (!name || !phone) {
+                showToast("Gagal", "Silakan isi nama lengkap dan nomor WhatsApp Anda.");
+                return;
+            }
+
+            const monthly = Math.round(animal.price / duration);
+            
+            if (initialDepositVal < monthly) {
+                showToast("Peringatan", `Setoran awal minimal senilai angsuran bulanan pertama (${formatRupiah(monthly)})`);
+                return;
+            }
+
+            const planId = "TAB-" + Math.floor(1000 + Math.random() * 9000);
+            const dateStr = formatDate(new Date());
+
+            const newPlan = {
+                id: planId,
+                animalId: animal.id,
+                animalName: animal.name,
+                animalImg: animal.img,
+                totalPrice: animal.price,
+                savedAmount: initialDepositVal,
+                durationMonths: duration,
+                monthlyAmount: monthly,
+                paymentsPaid: 1,
+                custName: name,
+                phone: phone,
+                paymentsHistory: [
+                    { date: dateStr, amount: initialDepositVal, desc: "Setoran Awal (Bulan 1)" }
+                ]
+            };
+
+            activeSavings.push(newPlan);
+            renderSavingsDashboard();
+            showToast("Tabungan Aktif", `Pendaftaran Berhasil! ID Tabungan Anda: ${planId}`);
+            
+            // Clear inputs
+            document.getElementById('savings-cust-name').value = '';
+            document.getElementById('savings-cust-phone').value = '';
+            document.getElementById('savings-initial-deposit').value = '';
+        }
+
+        function renderSavingsDashboard(filterTerm = '') {
+            const container = document.getElementById('savings-dashboard-list');
+            if (!container) return;
+            container.innerHTML = '';
+
+            const filteredPlans = activeSavings.filter(plan => {
+                return plan.id.toLowerCase().includes(filterTerm.toLowerCase()) || 
+                       plan.custName.toLowerCase().includes(filterTerm.toLowerCase()) ||
+                       plan.animalName.toLowerCase().includes(filterTerm.toLowerCase());
+            });
+
+            if (filteredPlans.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12 bg-white rounded-3xl border border-dashed border-slate-300">
+                        <i class="fa-solid fa-vault text-4xl text-slate-300 mb-3"></i>
+                        <p class="text-slate-500 font-medium text-sm">Belum ada rekening tabungan aktif.</p>
+                        <p class="text-xs text-slate-400 mt-1">Gunakan kalkulator di sebelah untuk mendaftar tabungan baru.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filteredPlans.forEach(plan => {
+                const percent = Math.min(100, Math.round((plan.savedAmount / plan.totalPrice) * 100));
+                const card = document.createElement('div');
+                card.className = "bg-white p-5 sm:p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4 animate-fadeIn";
+                
+                let historyItemsHTML = plan.paymentsHistory.map(hist => `
+                    <div class="flex justify-between items-center text-xs py-1.5 border-b border-slate-100 last:border-0">
+                        <span class="text-slate-500">${hist.date} - ${hist.desc}</span>
+                        <span class="font-bold text-emerald-800">+${formatRupiah(hist.amount)}</span>
+                    </div>
+                `).join('');
+
+                card.innerHTML = `
+                    <div class="flex items-center gap-4 border-b pb-4">
+                        <div class="w-16 h-16 rounded-xl overflow-hidden shrink-0 bg-slate-100">
+                            <img src="${plan.animalImg}" alt="${plan.animalName}" 
+                                 onerror="this.src='https://placehold.co/100x100/064e3b/fbbf24?text=Hewan'"
+                                 class="w-full h-full object-cover">
+                        </div>
+                        <div class="flex-grow">
+                            <span class="text-[10px] bg-amber-100 text-amber-800 font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider">${plan.id}</span>
+                            <h4 class="font-bold text-slate-900 text-sm sm:text-base mt-1.5">${plan.animalName}</h4>
+                            <p class="text-xs text-slate-500">Nasabah: ${plan.custName}</p>
+                        </div>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="space-y-1.5">
+                        <div class="flex justify-between text-xs font-semibold text-slate-700">
+                            <span>Progres Rencana Tabungan</span>
+                            <span class="text-emerald-800">${percent}% (${formatRupiah(plan.savedAmount)} / ${formatRupiah(plan.totalPrice)})</span>
+                        </div>
+                        <div class="w-full h-3 bg-slate-100 rounded-full overflow-hidden">
+                            <div class="h-full bg-gradient-to-r from-emerald-600 to-emerald-800 transition-all duration-500" style="width: ${percent}%"></div>
+                        </div>
+                        <div class="flex justify-between text-[11px] text-slate-400">
+                            <span>Angsuran: ${formatRupiah(plan.monthlyAmount)} / Bulan</span>
+                            <span>Status: ${plan.paymentsPaid} dari ${plan.durationMonths} Bulan Terbayar</span>
+                        </div>
+                    </div>
+
+                    <!-- Action installment simulated pay -->
+                    <div class="pt-2 flex gap-3">
+                        <button onclick="paySavingsInstallment('${plan.id}')" ${percent >= 100 ? 'disabled' : ''} class="flex-grow py-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${percent >= 100 ? 'bg-slate-100 text-slate-400 cursor-not-allowed' : 'bg-emerald-800 hover:bg-emerald-900 text-white shadow-sm'}">
+                            <i class="fa-solid fa-hand-holding-dollar"></i>
+                            <span>${percent >= 100 ? 'Tabungan Lunas' : 'Setor Angsuran (Simulasi)'}</span>
+                        </button>
+                    </div>
+
+                    <!-- Payment Log Accordion-Style -->
+                    <div class="bg-slate-50 p-3 rounded-2xl border text-xs">
+                        <p class="font-bold text-slate-800 mb-2 flex items-center gap-1.5">
+                            <i class="fa-solid fa-clock-rotate-left text-slate-400"></i> Riwayat Setoran
+                        </p>
+                        <div class="max-h-28 overflow-y-auto custom-scroll space-y-1 pr-1">
+                            ${historyItemsHTML}
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function filterSavingsDashboard() {
+            const val = document.getElementById('search-tabungan-input').value;
+            renderSavingsDashboard(val);
+        }
+
+        function paySavingsInstallment(planId) {
+            const plan = activeSavings.find(p => p.id === planId);
+            if (!plan) return;
+
+            const remaining = plan.totalPrice - plan.savedAmount;
+            if (remaining <= 0) return;
+
+            const paymentAmount = Math.min(plan.monthlyAmount, remaining);
+            plan.savedAmount += paymentAmount;
+            plan.paymentsPaid += 1;
+            
+            const nextBulan = plan.paymentsPaid;
+            const dateStr = formatDate(new Date());
+            
+            plan.paymentsHistory.unshift({
+                date: dateStr,
+                amount: paymentAmount,
+                desc: `Setoran Angsuran Bulan ${nextBulan}`
+            });
+
+            renderSavingsDashboard();
+            showToast("Setoran Berhasil", `Setoran sebesar ${formatRupiah(paymentAmount)} berhasil ditambahkan ke ${plan.id}.`);
+        }
+
+        // --- UTILITY FUNCTIONS ---
+        function formatRupiah(number) {
+            return new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0
+            }).format(number);
+        }
+
+        function formatDate(date) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return date.toLocaleDateString('id-ID', options);
+        }
+
+        function showToast(title, desc) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = "bg-slate-900 text-white p-4 rounded-2xl shadow-xl flex items-start space-x-3 max-w-sm pointer-events-auto transition-all duration-300 opacity-0 translate-y-2";
+            toast.innerHTML = `
+                <div class="w-6 h-6 rounded-full bg-emerald-800 text-white flex items-center justify-center shrink-0">
+                    <i class="fa-solid fa-circle-check text-xs"></i>
+                </div>
+                <div>
+                    <h5 class="font-bold text-sm text-slate-100">${title}</h5>
+                    <p class="text-xs text-slate-400 mt-0.5">${desc}</p>
+                </div>
+            `;
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.remove('opacity-0', 'translate-y-2');
+            }, 50);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        function printInvoice() {
+            window.print();
+        }
+    </script>
+</body>
+</html>
